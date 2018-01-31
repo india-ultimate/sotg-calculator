@@ -2,6 +2,7 @@
 
 from urllib.parse import urlparse
 
+from flask import Flask, render_template, request
 import pandas as pd
 
 
@@ -26,6 +27,9 @@ SELF_SCORE_COLUMNS = [
 TOTAL_SCORE_COLUMN = 'Score'
 TOTAL_SELF_SCORE_COLUMN = 'Self Score'
 
+app = Flask(__name__)
+
+
 def get_export_url(url):
     """Return the export URL from a spreadsheet URL."""
     parsed = urlparse(url)
@@ -34,9 +38,11 @@ def get_export_url(url):
     if not parsed.path.startswith(SPREADSHEET_PATH):
         raise ValueError('Not a google spreadsheets URL')
     key = parsed.path.split('/')[3]
-    return 'https://{netloc}{path}{key}/export?format=csv'.format(netloc=GOOGLE,
-                                                                  path=SPREADSHEET_PATH,
-                                                                  key=key)
+    return 'https://{netloc}{path}{key}/export?format=csv'.format(
+        netloc=GOOGLE,
+        path=SPREADSHEET_PATH,
+        key=key
+    )
 
 
 def get_teams(data, column=TEAM_COLUMN):
@@ -69,6 +75,7 @@ def get_rankings(data, teams):
     rankings['Avg spirit score'] = avg_score
     rankings['Avg self spirit score'] = avg_self_score
     rankings['Difference'] = avg_score - avg_self_score
+
     return rankings.sort_values('Avg spirit score', ascending=False)
 
 
@@ -86,7 +93,16 @@ def main(url):
     return rankings
 
 
+@app.route('/', methods=['GET'])
+def index():
+    url = request.args.get('url')
+    if url is not None:
+        rankings = main(url)
+        return rankings.to_html()
+
+    else:
+        return render_template('index.html')
+
+
 if __name__ == '__main__':
-    import sys
-    url = sys.argv[1]
-    rankings = main(url)
+    app.run(debug=True)

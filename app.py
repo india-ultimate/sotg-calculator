@@ -96,12 +96,8 @@ def main(url):
 @app.route('/', methods=['GET'])
 def index():
     url = request.args.get('url')
-    if url is not None:
-        rankings = main(url)
-        return rankings.to_html()
-
-    else:
-        return render_template('index.html')
+    rankings = main(url) if url is not None else None
+    return render_template('index.html.jinja', rankings=rankings)
 
 
 if __name__ == '__main__':

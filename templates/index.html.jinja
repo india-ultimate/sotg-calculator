@@ -1,0 +1,12 @@
+{% extends "base.html.jinja" %}
+{% block content %}
+<h1>Spirit score computations</h1>
+{% if rankings is not none %}
+{{ rankings.to_html(classes=['table']) }}
+{% else %}
+<form method="GET" action="{{url_for('index')}}">
+  <input type="text" name="url" placeholder="Google Sheets URL" />
+  <input type="submit" value="Get Scores" />
+</form>
+{% endif %}
+{% endblock %}

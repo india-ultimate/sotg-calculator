@@ -101,7 +101,7 @@ class SOTGScorer:
         # Get matches and total scores
         team_column = self.team_column
         matches = data.groupby(team_column)[team_column].count().rename('Matches')
-        score = data.groupby(OPPONENT_COLUMN)[TOTAL_SCORE_COLUMN].sum()
+        score = data.groupby(self.opponent_column)[TOTAL_SCORE_COLUMN].sum()
         self_score = data.groupby(team_column)[TOTAL_SELF_SCORE_COLUMN].sum()
 
         # Compute averages

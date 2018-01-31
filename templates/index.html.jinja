@@ -3,10 +3,31 @@
 <h1>Spirit score computations</h1>
 {% if rankings is not none %}
 {{ rankings.to_html(classes=['table']) }}
+{% elif url is not none %}
+<form method="GET" action="{{url_for('index')}}">
+  <div class="input-group">
+    <input type="hidden" name="url" value="{{url}}" placeholder="Google Sheets URL"/>
+    <label>Self Team Column</label>
+    <select name="team">
+      {% for column in all_columns %}
+      <option value="{{loop.index0}}" {% if columns.team|int == loop.index0 %}selected{% endif %}>{{column}}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="input-group">
+    <label>Opponent Team Column</label>
+    <select name="opponent">
+      {% for column in all_columns %}
+      <option value="{{loop.index0}}" {% if columns.opponent|int == loop.index0 %}selected{% endif %}>{{column}}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <input type="submit" value="Get Scores" class="btn btn-primary"/>
+</form>
 {% else %}
 <form method="GET" action="{{url_for('index')}}">
   <input type="text" name="url" placeholder="Google Sheets URL" />
-  <input type="submit" value="Get Scores" />
+  <input type="submit" value="Get Scores" class="btn btn-primary"/>
 </form>
 {% endif %}
 {% endblock %}

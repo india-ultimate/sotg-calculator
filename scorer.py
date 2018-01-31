@@ -31,8 +31,9 @@ class SpiritScorer:
     NETLOC = 'docs.google.com'
     PATH_PREFIX = '/spreadsheets/d/'
 
-    def __init__(self, url, *args, **kwargs):
+    def __init__(self, url, columns=None):
         self.url = self.get_export_url(url)
+        self.columns = columns or {}
 
     @classmethod
     def get_export_url(cls, url):
@@ -54,13 +55,21 @@ class SpiritScorer:
         """Return the data as a Pandas DataFrame."""
         if not hasattr(self, '_data'):
             self._data = pd.read_csv(self.url)
+            COLUMNS = self._data.columns
+            columns = self.columns
+            self.team_column = (
+                COLUMNS[int(columns.get('team'))] if columns.get('team') else TEAM_COLUMN
+            )
+            self.opponent_column = (
+                COLUMNS[int(columns.get('opponent'))] if columns.get('team') else OPPONENT_COLUMN
+            )
         return self._data
 
     @property
     def teams(self):
         """Return team names from the data."""
         if not hasattr(self, '_teams'):
-            column = TEAM_COLUMN
+            column = self.team_column
             data = self.data
             self._teams = list(data[data[column].notna()][column].unique())
         return self._teams
@@ -80,9 +89,10 @@ class SpiritScorer:
         data[TOTAL_SELF_SCORE_COLUMN] = total_self_score
 
         # Get matches and total scores
-        matches = data.groupby(TEAM_COLUMN)[TEAM_COLUMN].count().rename('Matches')
+        team_column = self.team_column
+        matches = data.groupby(team_column)[team_column].count().rename('Matches')
         score = data.groupby(OPPONENT_COLUMN)[TOTAL_SCORE_COLUMN].sum()
-        self_score = data.groupby(TEAM_COLUMN)[TOTAL_SELF_SCORE_COLUMN].sum()
+        self_score = data.groupby(team_column)[TOTAL_SELF_SCORE_COLUMN].sum()
 
         # Compute averages
         rankings = pd.DataFrame([matches, score, self_score]).transpose()

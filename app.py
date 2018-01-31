@@ -7,17 +7,42 @@ from scorer import SpiritScorer
 app = Flask(__name__)
 
 
+def parse_column_args():
+    columns = {
+        'team': request.args.get('team'),
+        'opponent': request.args.get('opponent')
+    }
+    return columns
+
+
 @app.route('/', methods=['GET'])
 def index():
     url = request.args.get('url')
-    if url is not None:
+    columns = parse_column_args()
+    if url is None:
+        rankings = None
+        all_columns = []
+
+    elif not all(columns.values()):
         scorer = SpiritScorer(url)
-        rankings = scorer.compute_rankings()
+        all_columns = list(scorer.data.columns)
+        try:
+            rankings = scorer.compute_rankings()
+
+        except KeyError as e:
+            # FIXME: Show message ....
+            rankings = None
 
     else:
-        rankings = None
+        scorer = SpiritScorer(url, columns=columns)
+        rankings = scorer.compute_rankings()
+        all_columns = list(scorer.data.columns)
 
-    return render_template('index.html.jinja', rankings=rankings)
+    return render_template('index.html.jinja',
+                           columns=columns,
+                           all_columns=all_columns,
+                           url=url,
+                           rankings=rankings)
 
 
 if __name__ == '__main__':

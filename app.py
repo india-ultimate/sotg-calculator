@@ -10,7 +10,9 @@ app = Flask(__name__)
 def parse_column_args():
     columns = {
         'team': request.args.get('team'),
-        'opponent': request.args.get('opponent')
+        'opponent': request.args.get('opponent'),
+        'team-score-columns': request.args.getlist('team-score-columns'),
+        'opponent-score-columns': request.args.getlist('opponent-score-columns'),
     }
     return columns
 

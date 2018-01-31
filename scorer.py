@@ -14,7 +14,7 @@ OPPONENT_SCORE_COLUMNS = [
     'Positive Attitude and Self-Control',
     'Communication',
 ]
-SELF_SCORE_COLUMNS = [
+TEAM_SCORE_COLUMNS = [
     'Rules Knowledge & Use.1',
     'Fouls and Body Contact.1',
     'Fair Mindedness.1',
@@ -60,8 +60,18 @@ class SpiritScorer:
             self.team_column = (
                 COLUMNS[int(columns.get('team'))] if columns.get('team') else TEAM_COLUMN
             )
+            self.team_score_columns = (
+                [COLUMNS[int(column)] for column in columns.get('team-score-columns')]
+                if columns.get('team-score-columns')
+                else TEAM_SCORE_COLUMNS
+            )
             self.opponent_column = (
                 COLUMNS[int(columns.get('opponent'))] if columns.get('team') else OPPONENT_COLUMN
+            )
+            self.opponent_score_columns = (
+                [COLUMNS[int(column)] for column in columns.get('opponent-score-columns')]
+                if columns.get('opponent-score-columns')
+                else OPPONENT_SCORE_COLUMNS
             )
         return self._data
 
@@ -83,9 +93,9 @@ class SpiritScorer:
         """
         data = self.data
         # Compute aggregate scores
-        total_score = data[OPPONENT_SCORE_COLUMNS].sum(axis=1)
+        total_score = data[self.opponent_score_columns].sum(axis=1)
         data[TOTAL_SCORE_COLUMN] = total_score
-        total_self_score = data[SELF_SCORE_COLUMNS].sum(axis=1)
+        total_self_score = data[self.team_score_columns].sum(axis=1)
         data[TOTAL_SELF_SCORE_COLUMN] = total_self_score
 
         # Get matches and total scores

@@ -5,8 +5,9 @@
 {{ rankings.to_html(classes=['table']) }}
 {% elif url is not none %}
 <form method="GET" action="{{url_for('index')}}">
+  <input type="hidden" name="url" value="{{url}}" placeholder="Google Sheets URL"/>
+
   <div class="input-group">
-    <input type="hidden" name="url" value="{{url}}" placeholder="Google Sheets URL"/>
     <label>Self Team Column</label>
     <select name="team">
       {% for column in all_columns %}
@@ -14,6 +15,15 @@
       {% endfor %}
     </select>
   </div>
+
+  <label>Self Scores Column Names</label>
+  {% for column in all_columns %}
+  <div class="input-group">
+    <input type="checkbox" name="team-score-columns" value="{{loop.index0}}"/>
+    <label>{{column}}</label>
+  </div>
+  {% endfor %}
+
   <div class="input-group">
     <label>Opponent Team Column</label>
     <select name="opponent">
@@ -22,6 +32,15 @@
       {% endfor %}
     </select>
   </div>
+
+  <label>Opponent Scores Column Names</label>
+  {% for column in all_columns %}
+  <div class="input-group">
+    <input type="checkbox" name="opponent-score-columns" value="{{loop.index0}}"/>
+    <label>{{column}}</label>
+  </div>
+  {% endfor %}
+
   <input type="submit" value="Get Scores" class="btn btn-primary"/>
 </form>
 {% else %}

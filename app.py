@@ -2,7 +2,7 @@
 
 from flask import Flask, render_template, request
 
-from scorer import SpiritScorer
+from scorer import SOTGScorer
 
 app = Flask(__name__)
 
@@ -26,7 +26,7 @@ def index():
         all_columns = []
 
     elif not all(columns.values()):
-        scorer = SpiritScorer(url)
+        scorer = SOTGScorer(url)
         all_columns = list(scorer.data.columns)
         try:
             rankings = scorer.compute_rankings()
@@ -36,7 +36,7 @@ def index():
             rankings = None
 
     else:
-        scorer = SpiritScorer(url, columns=columns)
+        scorer = SOTGScorer(url, columns=columns)
         rankings = scorer.compute_rankings()
         all_columns = list(scorer.data.columns)
 

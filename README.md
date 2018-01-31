@@ -1,4 +1,4 @@
-# Spirit scores
+# SOTG
 
 An interactive web-app to manage spirit scores for a tournament.
 

@@ -25,7 +25,7 @@ TOTAL_SCORE_COLUMN = 'Score'
 TOTAL_SELF_SCORE_COLUMN = 'Self Score'
 
 
-class SpiritScorer:
+class SOTGScorer:
     """A class to do all the spirit scoring"""
 
     NETLOC = 'docs.google.com'

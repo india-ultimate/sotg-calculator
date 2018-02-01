@@ -4,7 +4,22 @@
 {% if rankings is not none %}
 
 <!-- Display the rankings, if they have been computed! -->
+<h2>Rankings</h2>
 {{ rankings.to_html(classes=['table']) }}
+
+<!-- Display the detailed spirit scores by team -->
+<h2>Detailed Spirit Scores</h2>
+{% for team, scores in detailed_scores %}
+  <div class="card border-dark mb-5">
+    <div class="card-header text-center">
+      <strong>{{team}}</strong>
+    </div>
+    <div class="card-body">
+      {{ scores.to_html(index=False, classes=['table'], border=0, float_format='%d', justify='left') }}
+    </div>
+  </div>
+{% endfor %}
+
 
 {% elif url is not none %}
 

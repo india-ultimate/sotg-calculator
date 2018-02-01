@@ -53,12 +53,14 @@ def index():
         rankings = scorer.compute_rankings()
         all_columns = list(scorer.data.columns)
 
+    detailed_scores = scorer.compute_detailed_scores() if rankings is not None else None
     return render_template('index.html.jinja',
                            usage=get_usage(),
                            columns=columns,
                            all_columns=all_columns,
                            url=url,
-                           rankings=rankings)
+                           rankings=rankings,
+                           detailed_scores=detailed_scores)
 
 
 if __name__ == '__main__':

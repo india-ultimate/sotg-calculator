@@ -91,7 +91,7 @@ class SOTGScorer:
         if not hasattr(self, '_teams'):
             column = self.team_column
             data = self.data
-            self._teams = list(data[data[column].notna()][column].unique())
+            self._teams = sorted(data[data[column].notna()][column].unique())
         return self._teams
 
     def _make_scores_numbers(self):
@@ -152,3 +152,20 @@ class SOTGScorer:
         rankings.columns.name = 'Rank'
 
         return rankings
+
+    def compute_detailed_scores(self):
+        """Return detailed spirit score tables for each team."""
+
+        detailed_scores = [
+            (team, self._get_team_scores(team))
+            for team in self.teams
+        ]
+        return detailed_scores
+
+    def _get_team_scores(self, team):
+        """Return all the spirit scores of the given team."""
+
+        # FIXME: Need to add day of the game
+        columns = [self.team_column] + self.opponent_score_columns + [TOTAL_SCORE_COLUMN]
+        scores = self.data[self.data[self.opponent_column] == team][columns]
+        return scores.rename(columns={self.team_column: 'Scored by'})

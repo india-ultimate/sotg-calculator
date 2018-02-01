@@ -23,7 +23,10 @@ def get_usage():
             break
         else:
             usage += line
-    return mistune.markdown(usage, escape=False)
+
+    html = mistune.markdown(usage, escape=False)
+    usage, more_usage = html.split('<!-- More -->')
+    return usage, more_usage
 
 
 @app.route('/', methods=['GET'])
@@ -66,9 +69,12 @@ def index():
     for e in errors:
         flash(e, 'error')
 
+    usage, more_usage = get_usage()
+
     return render_template('index.html.jinja',
                            errors=errors,
-                           usage=get_usage(),
+                           usage=usage,
+                           more_usage=more_usage,
                            columns=columns,
                            all_columns=all_columns,
                            url=url,

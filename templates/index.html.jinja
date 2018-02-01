@@ -133,7 +133,16 @@
 <!-- Display the form to get the Spreadsheet URL -->
 <div class="card card-body bg-light mb-3">
   {{usage|safe}}
+  <a data-toggle="collapse" href="#more-usage" role="button" aria-expanded="false" aria-controls="more-usage">
+    Read more...
+  </a>
+  <div class="collapse" id="more-usage">
+    <div class="card card-body bg-light">
+      {{more_usage|safe}}
+  </div>
+  </div>
 </div>
+
 <form method="GET" class="row" action="{{url_for('index')}}">
   <input type="text" class="col-md-9 form-control-lg" name="url" placeholder="Google Sheets URL here..." />
   <input type="submit" value="Calculate Ranks" class="col-md-3 btn btn-primary"/>

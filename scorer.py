@@ -93,9 +93,12 @@ class SOTGScorer:
     def teams(self):
         """Return team names from the data."""
         if not hasattr(self, '_teams'):
-            column = self.team_column
+            team = self.team_column
+            opponent = self.opponent_column
             data = self.data
-            self._teams = sorted(data[data[column].notna()][column].unique())
+            teams = set(data[data[team].notna()][team].unique())
+            opponents = set(data[data[opponent].notna()][opponent].unique())
+            self._teams = sorted(teams | opponents)
         return self._teams
 
     def _make_scores_numbers(self):

@@ -5,7 +5,7 @@
 
 <!-- Display the rankings, if they have been computed! -->
 <h2>Rankings</h2>
-{{ rankings.to_html(classes=['table']) }}
+{{ rankings.to_html(classes=['table'], float_format='%.2f', justify='left', border=0) }}
 
 <!-- Display the detailed spirit scores by team -->
 <h2>Detailed Spirit Scores</h2>

@@ -125,16 +125,16 @@
     </select>
   </div>
 
-  <input type="submit" value="Calculate Ranks" class="btn btn-primary"/>
+  <input type="submit" value="Calculate Ranks" class="col btn btn-primary"/>
 </form>
 
 {% else %}
 
 <!-- Display the form to get the Spreadsheet URL -->
 {{usage|safe}}
-<form method="GET" class="form-inline" action="{{url_for('index')}}">
-    <input type="text" class="col form-control-lg" name="url" placeholder="Google Sheets URL here..." />
-    <input type="submit" value="Calculate Ranks" class="col-2 mb-2 btn btn-primary"/>
+<form method="GET" class="row" action="{{url_for('index')}}">
+  <input type="text" class="col-md-9 form-control-lg" name="url" placeholder="Google Sheets URL here..." />
+  <input type="submit" value="Calculate Ranks" class="col-md-3 btn btn-primary"/>
 </form>
 
 {% endif %}

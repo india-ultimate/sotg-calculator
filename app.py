@@ -37,6 +37,7 @@ def index():
 
     rankings = None
     received_scores = awarded_scores = all_columns = []
+    prompt_column_select = False
 
     if url is None:
         pass
@@ -49,6 +50,7 @@ def index():
 
         except Exception as e:
             # FIXME: Show message ....
+            prompt_column_select = True
             print(e)
 
     else:
@@ -61,6 +63,7 @@ def index():
                            columns=columns,
                            all_columns=all_columns,
                            url=url,
+                           prompt_column_select=prompt_column_select,
                            rankings=rankings,
                            received_scores=received_scores,
                            awarded_scores=awarded_scores)

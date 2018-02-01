@@ -1,9 +1,11 @@
 {% extends "base.html.jinja" %}
 {% block content %}
-<a href="{{url_for('index')}}"><h1>SOTG Calculator</h1></a>
+
+<a class="d-print-none" href="{{url_for('index')}}"><h1>SOTG Calculator</h1></a>
+
 {% if rankings is not none and detailed_scores %}
 
-<nav>
+<nav class="d-print-none">
   <div class="nav nav-tabs" id="nav-tab" role="tablist">
     <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Rankings</a>
     <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Detailed Spirit Scores</a>

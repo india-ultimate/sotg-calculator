@@ -12,7 +12,9 @@
 
 <div class="tab-content" id="nav-tabContent">
   <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-    {{ rankings.to_html(classes=['table'], float_format='%.2f', justify='left', border=0) }}
+    <div class="table-responsive">
+      {{ rankings.to_html(classes=['table', 'table-striped'], float_format='%.2f', justify='left', border=0) }}
+    </div>
   </div>
   <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
     {% for team, scores in detailed_scores %}
@@ -20,8 +22,8 @@
       <div class="card-header text-center">
         <strong>{{team}}</strong>
       </div>
-      <div class="card-body">
-        {{ scores.to_html(index=False, classes=['table'], border=0, float_format='%d', justify='left') }}
+      <div class="card-body table-responsive">
+        {{ scores.to_html(index=False, classes=['table', 'table-striped'], border=0, float_format='%d', justify='left') }}
       </div>
     </div>
     {% endfor %}

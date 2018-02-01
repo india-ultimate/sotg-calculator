@@ -131,7 +131,9 @@
 {% else %}
 
 <!-- Display the form to get the Spreadsheet URL -->
-{{usage|safe}}
+<div class="card card-body bg-light mb-3">
+  {{usage|safe}}
+</div>
 <form method="GET" class="row" action="{{url_for('index')}}">
   <input type="text" class="col-md-9 form-control-lg" name="url" placeholder="Google Sheets URL here..." />
   <input type="submit" value="Calculate Ranks" class="col-md-3 btn btn-primary"/>

@@ -136,4 +136,19 @@ class SOTGScorer:
         rankings['Avg self spirit score'] = avg_self_score
         rankings['Difference'] = avg_score - avg_self_score
 
-        return rankings.sort_values('Avg spirit score', ascending=False)
+        # Compute and append rankings
+        # FIXME: This is such a mess!
+        rankings = rankings.sort_values('Avg spirit score', ascending=False)
+        ranks = rankings['Avg spirit score'].rank(method='min', ascending=False)
+        rankings['Rank'] = pd.Series(ranks, dtype=pd.np.int)
+        rankings['Team'] = rankings.index
+        rankings = rankings.set_index('Rank', drop=True)
+        rankings.index.name = None
+        column_order = [
+            'Team', 'Matches', 'Score', 'Self Score',
+            'Avg spirit score', 'Avg self spirit score', 'Difference'
+        ]
+        rankings = rankings[column_order]
+        rankings.columns.name = 'Rank'
+
+        return rankings

@@ -147,14 +147,23 @@ class SOTGScorer:
         ranks = rankings['Avg spirit score'].rank(method='min', ascending=False)
         rankings['Rank'] = pd.Series(ranks, dtype=d_int)
         rankings['Team'] = rankings.index
-        rankings = rankings.set_index('Rank', drop=True)
-        rankings.index.name = None
         column_order = [
-            'Team', 'Matches', 'Score', 'Self Score',
+            'Rank', 'Team', 'Matches', 'Score', 'Self Score',
             'Avg spirit score', 'Avg self spirit score', 'Difference'
         ]
         rankings = rankings[column_order]
-        rankings.columns.name = 'Rank'
+
+        # Styling
+        rankings = rankings.style\
+                           .set_precision('4')\
+                           .set_table_attributes(
+                               'border="0" class="dataframe table table-hover table-striped"'
+                           )\
+                           .set_table_styles([
+                               dict(selector=".row_heading", props=[("display", "none")]),
+                               dict(selector=".blank", props=[("display", "none")])
+                           ])\
+                           .apply(self._bold_columns, axis=0)
 
         return rankings
 
@@ -174,3 +183,11 @@ class SOTGScorer:
         columns = [self.team_column, self.day_column] + self.opponent_score_columns + [TOTAL_SCORE_COLUMN]
         scores = self.data[self.data[self.opponent_column] == team][columns]
         return scores.rename(columns={self.team_column: 'Scored by'})
+
+    def _bold_columns(self, column):
+        """Set font-weight if column needs to be bold"""
+
+        return [
+            'font-weight: 700;' if column.name in {'Rank', 'Team', 'Avg spirit score'} else ''
+            for _ in column
+        ]

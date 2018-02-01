@@ -3,23 +3,30 @@
 <h1 class="display-1">SOTG Calculator</h1>
 {% if rankings is not none %}
 
-<!-- Display the rankings, if they have been computed! -->
-<h2>Rankings</h2>
-{{ rankings.to_html(classes=['table'], float_format='%.2f', justify='left', border=0) }}
-
-<!-- Display the detailed spirit scores by team -->
-<h2>Detailed Spirit Scores</h2>
-{% for team, scores in detailed_scores %}
-  <div class="card border-dark mb-5">
-    <div class="card-header text-center">
-      <strong>{{team}}</strong>
-    </div>
-    <div class="card-body">
-      {{ scores.to_html(index=False, classes=['table'], border=0, float_format='%d', justify='left') }}
-    </div>
+<nav>
+  <div class="nav nav-tabs" id="nav-tab" role="tablist">
+    <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Rankings</a>
+    <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Detailed Spirit Scores</a>
   </div>
-{% endfor %}
+</nav>
 
+<div class="tab-content" id="nav-tabContent">
+  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+    {{ rankings.to_html(classes=['table'], float_format='%.2f', justify='left', border=0) }}
+  </div>
+  <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+    {% for team, scores in detailed_scores %}
+    <div class="card border-dark mb-5">
+      <div class="card-header text-center">
+        <strong>{{team}}</strong>
+      </div>
+      <div class="card-body">
+        {{ scores.to_html(index=False, classes=['table'], border=0, float_format='%d', justify='left') }}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
 
 {% elif url is not none %}
 
@@ -83,7 +90,6 @@
     </div>
     {% endfor %}
   </div>
-
 
   <input type="submit" value="Get Scores" class="btn btn-primary"/>
 </form>

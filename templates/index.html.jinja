@@ -1,6 +1,6 @@
 {% extends "base.html.jinja" %}
 {% block content %}
-<h1>Spirit score computations</h1>
+<h1 class="display-1">SOTG Calculator</h1>
 {% if rankings is not none %}
 
 <!-- Display the rankings, if they have been computed! -->
@@ -76,9 +76,9 @@
 {% else %}
 
 <!-- Display the form to get the Spreadsheet URL -->
-<form method="GET" action="{{url_for('index')}}">
-  <input type="text" name="url" placeholder="Google Sheets URL" />
-  <input type="submit" value="Get Scores" class="btn btn-primary"/>
+<form method="GET" class="form-inline" action="{{url_for('index')}}">
+    <input type="text" class="col form-control-lg" name="url" placeholder="Google Sheets URL" />
+    <input type="submit" value="Get Scores" class="col-2 mb-2 btn btn-primary"/>
 </form>
 
 {% endif %}

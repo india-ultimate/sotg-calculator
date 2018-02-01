@@ -1,4 +1,4 @@
-# SOTG
+# SOTG Calculator
 
 An interactive web-app to manage spirit scores for a tournament.
 

@@ -21,6 +21,7 @@ TEAM_SCORE_COLUMNS = [
     'Positive Attitude and Self-Control.1',
     'Communication.1',
 ]
+DAY_COLUMN = 'Day'
 TOTAL_SCORE_COLUMN = 'Score'
 TOTAL_SELF_SCORE_COLUMN = 'Self Score'
 
@@ -82,6 +83,9 @@ class SOTGScorer:
                 [COLUMNS[int(column)] for column in columns.get('opponent-score-columns')]
                 if columns.get('opponent-score-columns')
                 else OPPONENT_SCORE_COLUMNS
+            )
+            self.day_column = (
+                COLUMNS[int(columns.get('day'))] if columns.get('day') else DAY_COLUMN
             )
         return self._data
 
@@ -167,6 +171,6 @@ class SOTGScorer:
         """Return all the spirit scores of the given team."""
 
         # FIXME: Need to add day of the game
-        columns = [self.team_column] + self.opponent_score_columns + [TOTAL_SCORE_COLUMN]
+        columns = [self.team_column, self.day_column] + self.opponent_score_columns + [TOTAL_SCORE_COLUMN]
         scores = self.data[self.data[self.opponent_column] == team][columns]
         return scores.rename(columns={self.team_column: 'Scored by'})

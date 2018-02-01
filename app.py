@@ -30,30 +30,35 @@ def index():
     columns = {
         'team': request.args.get('team'),
         'opponent': request.args.get('opponent'),
+        'day': request.args.get('day'),
         'team-score-columns': request.args.getlist('team-score-columns'),
         'opponent-score-columns': request.args.getlist('opponent-score-columns'),
     }
 
+    rankings = None
+    detailed_scores = []
+    all_columns = []
+
     if url is None:
-        rankings = None
-        all_columns = []
+        pass
 
     elif not all(columns.values()):
         scorer = SOTGScorer(url)
         all_columns = list(scorer.data.columns)
         try:
             rankings = scorer.compute_rankings()
+            detailed_scores = scorer.compute_detailed_scores()
 
         except KeyError as e:
             # FIXME: Show message ....
-            rankings = None
+            print(e)
 
     else:
         scorer = SOTGScorer(url, columns=columns)
         rankings = scorer.compute_rankings()
+        detailed_scores = scorer.compute_detailed_scores()
         all_columns = list(scorer.data.columns)
 
-    detailed_scores = scorer.compute_detailed_scores() if rankings is not None else None
     return render_template('index.html.jinja',
                            usage=get_usage(),
                            columns=columns,

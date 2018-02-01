@@ -1,7 +1,7 @@
 {% extends "base.html.jinja" %}
 {% block content %}
 <h1 class="display-1">SOTG Calculator</h1>
-{% if rankings is not none %}
+{% if rankings is not none and detailed_scores %}
 
 <nav>
   <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -89,6 +89,19 @@
       <label class="custom-control-label" for="team-score-column-{{loop.index0}}">{{column}}</label>
     </div>
     {% endfor %}
+  </div>
+
+  <div class="form-group">
+    <label for"day-column">Day Column</label>
+    <small class="form-text">Select column with the day information</small>
+    <select name="day" class="custom-select" id="day-column">
+      {% for column in all_columns %}
+      <option value="{{loop.index0}}"
+              {% if columns.day|int == loop.index0 %}selected{% endif %}>
+        {{column}}
+      </option>
+      {% endfor %}
+    </select>
   </div>
 
   <input type="submit" value="Get Scores" class="btn btn-primary"/>

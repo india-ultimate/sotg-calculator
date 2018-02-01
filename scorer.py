@@ -111,7 +111,8 @@ class SOTGScorer:
         if not self_scores.dtypes.apply(lambda x: x.type == pd.np.float64).all():
             data[self.team_score_columns] = self_scores.applymap(to_numbers)
 
-    def compute_rankings(self):
+    @property
+    def rankings(self):
         """Return spirit rankings given data, teams, and column names.
 
         The rankings are in the following format:
@@ -169,22 +170,45 @@ class SOTGScorer:
 
         return rankings
 
-    def compute_detailed_scores(self):
-        """Return detailed spirit score tables for each team."""
+    @property
+    def received_scores(self):
+        """Return spirit scores received by each team."""
 
         detailed_scores = [
-            (team, self._get_team_scores(team))
+            (team, self._get_received_scores(team))
             for team in self.teams
         ]
         return detailed_scores
 
-    def _get_team_scores(self, team):
-        """Return all the spirit scores of the given team."""
+    @property
+    def awarded_scores(self):
+        """Return spirit scores awarded by each team."""
 
-        # FIXME: Need to add day of the game
+        detailed_scores = [
+            (team, self._get_awarded_scores(team))
+            for team in self.teams
+        ]
+        return detailed_scores
+
+    @property
+    def all_scores(self):
+        """Return rankings, received and awarded scores."""
+
+        return self.rankings, self.received_scores, self.awarded_scores
+
+    def _get_received_scores(self, team):
+        """Return all the spirit scores received by the specified team."""
+
         columns = [self.team_column, self.day_column] + self.opponent_score_columns + [TOTAL_SCORE_COLUMN]
         scores = self.data[self.data[self.opponent_column] == team][columns]
         return scores.rename(columns={self.team_column: 'Scored by'})
+
+    def _get_awarded_scores(self, team):
+        """Return all the spirit scores awarded by the specified team."""
+
+        columns = [self.opponent_column, self.day_column] + self.opponent_score_columns + [TOTAL_SCORE_COLUMN]
+        scores = self.data[self.data[self.team_column] == team][columns]
+        return scores
 
     def _bold_columns(self, column):
         """Set font-weight if column needs to be bold"""

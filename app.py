@@ -36,8 +36,7 @@ def index():
     }
 
     rankings = None
-    detailed_scores = []
-    all_columns = []
+    received_scores = awarded_scores = all_columns = []
 
     if url is None:
         pass
@@ -46,17 +45,15 @@ def index():
         scorer = SOTGScorer(url)
         all_columns = list(scorer.data.columns)
         try:
-            rankings = scorer.compute_rankings()
-            detailed_scores = scorer.compute_detailed_scores()
+            rankings, received_scores, awarded_scores = scorer.all_scores
 
-        except KeyError as e:
+        except Exception as e:
             # FIXME: Show message ....
             print(e)
 
     else:
         scorer = SOTGScorer(url, columns=columns)
-        rankings = scorer.compute_rankings()
-        detailed_scores = scorer.compute_detailed_scores()
+        rankings, received_scores, awarded_scores = scorer.all_scores
         all_columns = list(scorer.data.columns)
 
     return render_template('index.html.jinja',
@@ -65,7 +62,8 @@ def index():
                            all_columns=all_columns,
                            url=url,
                            rankings=rankings,
-                           detailed_scores=detailed_scores)
+                           received_scores=received_scores,
+                           awarded_scores=awarded_scores)
 
 
 if __name__ == '__main__':

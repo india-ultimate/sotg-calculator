@@ -21,7 +21,7 @@ def get_usage():
             break
         else:
             usage += line
-    return mistune.markdown(usage)
+    return mistune.markdown(usage, escape=False)
 
 
 @app.route('/', methods=['GET'])

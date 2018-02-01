@@ -53,7 +53,7 @@
 
 <!-- Form to choose the columns to use for scoring -->
 <form method="GET" action="{{url_for('index')}}">
-  <input type="hidden" name="url" value="{{url}}" placeholder="Google Sheets URL"/>
+  <input type="hidden" name="url" value="{{url}}" placeholder="Google Sheets URL here..."/>
 
 
   <div class="form-group">
@@ -125,7 +125,7 @@
     </select>
   </div>
 
-  <input type="submit" value="Get Scores" class="btn btn-primary"/>
+  <input type="submit" value="Calculate Ranks" class="btn btn-primary"/>
 </form>
 
 {% else %}
@@ -133,8 +133,8 @@
 <!-- Display the form to get the Spreadsheet URL -->
 {{usage|safe}}
 <form method="GET" class="form-inline" action="{{url_for('index')}}">
-    <input type="text" class="col form-control-lg" name="url" placeholder="Google Sheets URL" />
-    <input type="submit" value="Get Scores" class="col-2 mb-2 btn btn-primary"/>
+    <input type="text" class="col form-control-lg" name="url" placeholder="Google Sheets URL here..." />
+    <input type="submit" value="Calculate Ranks" class="col-2 mb-2 btn btn-primary"/>
 </form>
 
 {% endif %}

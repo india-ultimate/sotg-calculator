@@ -4,22 +4,25 @@ An interactive web-app to manage spirit scores for a tournament.
 
 ## Usage
 
-1. Use a copy of [this form](https://docs.google.com/spreadsheets/d/1q3Zr1IbbL6r87UpGkQ-D9hyJtw6cP8GlVLVRvFkVACU/edit#gid=1141649430 "form template") for accepting spirit scores
-   - Make a copy of the responses sheet by navigating to `File > Make a copy...`
-   - From the copied spreadsheet, open the Google form by navigating to `Form > Edit form`
+1. Use a copy of <a href="https://docs.google.com/spreadsheets/d/1q3Zr1IbbL6r87UpGkQ-D9hyJtw6cP8GlVLVRvFkVACU/edit#gid=1141649430" target="_blank_">this form</a> for accepting spirit scores
+   - Make a copy of the responses sheet by navigating to `File > Make a
+    copy...`. (*NOTE:* You need to be signed into your Google account)
+   - From the copied spreadsheet, open the Google form by navigating to `Form >
+     Edit form`
    - Edit the form, as required
-     - Change title, team, etc.
+     - Change title, teams, etc.
      - Add any new questions if required
-     - **DO NOT** change the existing questions
-
-   If you have already collected responses using a "slightly" different form,
-   you can use it, as long as it has all the mandatory columns.
-1. Make the responses sheet viewable by anybody who has the URL
-1. Paste the URL into the web app
-1. See spirit rankings, and the scores received and awarded by each team.
+     - Do *NOT* change the existing questions
+   - Share the form URL of this edited form, to collect responses. If you have
+     already collected responses using a "slightly" different form, you can use
+     it, as long as it has all the required columns and is viewable by anybody
+     with the URL.
+1. Copy and paste the response spreadsheet URL into the URL entry box (`Google
+   Sheets URL here...`).
+1. Click `Calculate Ranks`
 1. Profit!
 
-[Example calculated scores](https://sotg-calculator.herokuapp.com/?url=https%3A%2F%2Fdocs.google.com%2Fspreadsheets%2Fd%2F10uHbqsqrFV_5eFdpPi4ybHeKnzEzpNe1uq6LlCR8hwU) here are calculated from this [sample response sheet](https://docs.google.com/spreadsheets/d/10uHbqsqrFV_5eFdpPi4ybHeKnzEzpNe1uq6LlCR8hwU/edit#gid=1141649430).
+<a href="https://sotg-calculator.herokuapp.com/?url=https%3A%2F%2Fdocs.google.com%2Fspreadsheets%2Fd%2F10uHbqsqrFV_5eFdpPi4ybHeKnzEzpNe1uq6LlCR8hwU" target="_blank_">Example calculated scores</a> here are calculated from this <a href="https://docs.google.com/spreadsheets/d/10uHbqsqrFV_5eFdpPi4ybHeKnzEzpNe1uq6LlCR8hwU/edit#gid=1141649430" target="_blank_">sample response sheet</a>
 
 ## License
 

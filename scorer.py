@@ -8,18 +8,18 @@ import pandas as pd
 TEAM_COLUMN = 'Your Team'
 OPPONENT_COLUMN = 'Opponent Team'
 OPPONENT_SCORE_COLUMNS = [
-    'Rules Knowledge & Use',
+    'Rules Knowledge and Use',
     'Fouls and Body Contact',
-    'Fair Mindedness',
+    'Fair-Mindedness',
     'Positive Attitude and Self-Control',
     'Communication',
 ]
 TEAM_SCORE_COLUMNS = [
-    'Rules Knowledge & Use.1',
-    'Fouls and Body Contact.1',
-    'Fair Mindedness.1',
-    'Positive Attitude and Self-Control.1',
-    'Communication.1',
+    'Rules Knowledge and Use (self)',
+    'Fouls and Body Contact (self)',
+    'Fair-Mindedness (self)',
+    'Positive Attitude and Self-Control (self)',
+    'Communication (self)',
 ]
 DAY_COLUMN = 'Day'
 TOTAL_SCORE_COLUMN = 'Score'

@@ -127,28 +127,30 @@ class SOTGScorer:
         total_self_score = data[self.team_score_columns].sum(axis=1)
         data[TOTAL_SELF_SCORE_COLUMN] = total_self_score
 
-        # Get matches and total scores
+        # Get matches, total scores and averages
         team_column = self.team_column
-        matches = data.groupby(team_column)[team_column].count().rename('Matches')
+        opponent_column = self.opponent_column
+        score_matches = data.groupby(opponent_column)[opponent_column].count()
+        self_score_matches = data.groupby(team_column)[team_column].count()
         score = data.groupby(self.opponent_column)[TOTAL_SCORE_COLUMN].sum()
         self_score = data.groupby(team_column)[TOTAL_SELF_SCORE_COLUMN].sum()
+        avg_score = score/score_matches
+        avg_self_score = self_score/self_score_matches
 
-        # Compute averages
-        rankings = pd.DataFrame([matches, score, self_score], dtype=d_int).transpose()
-        avg_score = score/matches
-        avg_self_score = self_score/matches
+        # Create dataframe to use for ranking
+        rankings = pd.DataFrame([score, self_score], dtype=d_int).transpose()
         rankings['Avg spirit score'] = avg_score
         rankings['Avg self spirit score'] = avg_self_score
         rankings['Difference'] = avg_score - avg_self_score
 
-        # Compute and append rankings
+        # Compute and order by ranks
         # FIXME: This is such a mess!
         rankings = rankings.sort_values('Avg spirit score', ascending=False)
         ranks = rankings['Avg spirit score'].rank(method='min', ascending=False)
         rankings['Rank'] = pd.Series(ranks, dtype=d_int)
         rankings['Team'] = rankings.index
         column_order = [
-            'Rank', 'Team', 'Matches', 'Score', 'Self Score',
+            'Rank', 'Team', 'Score', 'Self Score',
             'Avg spirit score', 'Avg self spirit score', 'Difference'
         ]
         rankings = rankings[column_order]

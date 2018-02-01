@@ -1,14 +1,16 @@
 #!/usr/bin/env python
 
+import os
 from os.path import abspath, dirname, join
-from flask import Flask, render_template, request
+from flask import flash, Flask, render_template, request
 import mistune
 
-from scorer import SOTGScorer
+from scorer import SOTGScorer, InvalidURLException
 
 HERE = dirname(abspath(__file__))
 README = join(HERE, 'README.md')
 app = Flask(__name__)
+app.secret_key = os.getenv('SECRET_KEY', 'Super secret key')
 
 
 def get_usage():
@@ -37,28 +39,35 @@ def index():
 
     rankings = None
     received_scores = awarded_scores = all_columns = []
+    errors = []
     prompt_column_select = False
 
-    if url is None:
+    if not url:
         pass
 
     elif not all(columns.values()):
-        scorer = SOTGScorer(url)
-        all_columns = list(scorer.data.columns)
         try:
-            rankings, received_scores, awarded_scores = scorer.all_scores
-
-        except Exception as e:
-            # FIXME: Show message ....
-            prompt_column_select = True
-            print(e)
+            scorer = SOTGScorer(url)
+        except InvalidURLException as e:
+            errors.append('Invalid URL - {}'.format(e))
+        else:
+            all_columns = list(scorer.data.columns)
+            try:
+                rankings, received_scores, awarded_scores = scorer.all_scores
+            except Exception as e:
+                prompt_column_select = True
+                errors.append('Failed to compute rankings: {}'.format(e))
 
     else:
         scorer = SOTGScorer(url, columns=columns)
         rankings, received_scores, awarded_scores = scorer.all_scores
         all_columns = list(scorer.data.columns)
 
+    for e in errors:
+        flash(e, 'error')
+
     return render_template('index.html.jinja',
+                           errors=errors,
                            usage=get_usage(),
                            columns=columns,
                            all_columns=all_columns,

@@ -36,6 +36,10 @@ def to_numbers(x):
     return x
 
 
+class InvalidURLException(Exception):
+    pass
+
+
 class SOTGScorer:
     """A class to do all the spirit scoring"""
 
@@ -51,9 +55,9 @@ class SOTGScorer:
         """Return the export URL from a spreadsheet URL."""
         parsed = urlparse(url)
         if not parsed.netloc == cls.NETLOC:
-            raise ValueError('Not a google spreadsheets URL')
+            raise InvalidURLException('Not a google spreadsheets URL')
         if not parsed.path.startswith(cls.PATH_PREFIX):
-            raise ValueError('Not a google spreadsheets URL')
+            raise InvalidURLException('Not a google spreadsheets URL')
         key = parsed.path.split('/')[3]
         return 'https://{netloc}{path}{key}/export?format=csv'.format(
             netloc=cls.NETLOC,

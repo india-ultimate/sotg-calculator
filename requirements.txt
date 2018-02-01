@@ -4,6 +4,7 @@ gunicorn==19.7.1
 itsdangerous==0.24
 Jinja2==2.10
 MarkupSafe==1.0
+mistune==0.8.3
 numpy==1.14.0
 pandas==0.22.0
 python-dateutil==2.6.1

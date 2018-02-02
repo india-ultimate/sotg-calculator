@@ -1,0 +1,76 @@
+<!-- Form to choose the columns to use for scoring -->
+<form method="GET" action="{{url_for('index')}}">
+  <input type="hidden" name="url" value="{{url}}" placeholder="Google Sheets URL here..."/>
+
+
+  <div class="form-group">
+    <label for"opponent-name-column">Opponent Team Column</label>
+    <small class="form-text">Select column with the name of the opponent team</small>
+    <select name="opponent" class="custom-select" id="opponent-name-column">
+      {% for column in all_columns %}
+      <option value="{{loop.index0}}"
+              {% if columns.opponent|int == loop.index0 %}selected{% endif %}>
+        {{column}}
+      </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="form-group">
+  <label>Opponent Scores Column Names</label>
+  <small class="form-text">Select columns with the opponent spirit scores</small>
+  {% for column in all_columns %}
+  <div class="custom-control custom-checkbox">
+    <input type="checkbox"
+           class="custom-control-input"
+           name="opponent-score-columns"
+           id="opponent-score-column-{{loop.index0}}"
+           value="{{loop.index0}}"/>
+    <label class="custom-control-label" for="opponent-score-column-{{loop.index0}}">{{column}}</label>
+  </div>
+  {% endfor %}
+  </div>
+
+  <div class="form-group">
+    <label for="self-team-column">Self Team Column</label>
+    <small class="form-text">Select column with the name of the team doing scoring (self)</small>
+    <select class="custom-select" name="team" id="team-name-column">
+      {% for column in all_columns %}
+      <option value="{{loop.index0}}"
+              {% if columns.team|int == loop.index0 %}selected{% endif %}>
+        {{column}}
+      </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>Self Scores Column Names</label>
+    <small class="form-text">Select columns with the self spirit scores</small>
+    {% for column in all_columns %}
+    <div class="custom-control custom-checkbox">
+      <input type="checkbox"
+             class="custom-control-input"
+             name="team-score-columns"
+             id="team-score-column-{{loop.index0}}"
+             value="{{loop.index0}}"/>
+      <label class="custom-control-label" for="team-score-column-{{loop.index0}}">{{column}}</label>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="form-group">
+    <label for"day-column">Day Column</label>
+    <small class="form-text">Select column with the day information</small>
+    <select name="day" class="custom-select" id="day-column">
+      {% for column in all_columns %}
+      <option value="{{loop.index0}}"
+              {% if columns.day|int == loop.index0 %}selected{% endif %}>
+        {{column}}
+      </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <input type="submit" value="Calculate Ranks" class="col btn btn-primary"/>
+</form>

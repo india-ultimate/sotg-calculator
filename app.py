@@ -56,7 +56,8 @@ def index():
     prompt_column_select = False
 
     if not url:
-        pass
+        if 'url' in request.args:
+            errors.append('Please supply a Google Sheets URL')
 
     elif not all(columns.values()):
         try:
@@ -67,9 +68,16 @@ def index():
             all_columns = list(scorer.data.columns)
             try:
                 rankings, received_scores, awarded_scores = scorer.all_scores
-            except Exception as e:
+            except KeyError as e:
                 prompt_column_select = True
-                errors.append('Failed to compute rankings: {}'.format(e))
+                errors.append(
+                    'Some columns are named differently. '
+                    'Please select the columns to use for the calculations'
+                )
+            except Exception as e:
+                print(repr(e))
+                prompt_column_select = True
+                errors.append('Unknown Error: Try selecting the columns to use for the calculations')
 
     else:
         scorer = SOTGScorer(url, columns=columns)

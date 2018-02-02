@@ -31,6 +31,11 @@ def get_usage():
 
     html = mistune.markdown(usage, escape=False)
     usage, more_usage = html.split('<!-- More -->')
+
+    with open(join(HERE, 'templates', 'read-more-button.html.jinja')) as f:
+        button_code = f.read().strip()
+    usage = usage.replace('<!-- see-more-link -->', button_code)
+
     return usage, more_usage
 
 

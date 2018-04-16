@@ -31,6 +31,13 @@ An interactive web-app to manage spirit scores for a tournament.
   with the URL.
 - Go to Step #2 above, after responses have been collected
 
+## Screenshots
+
+Here is a demo gif!
+
+![sotg-calculator-demo](https://user-images.githubusercontent.com/315678/38825245-7c9694f4-41c9-11e8-837c-c25ae7c307e0.gif)
+
+
 ## License
 
 This code is licensed under the GNU AGPL v3. Please see the `LICENSE` file for

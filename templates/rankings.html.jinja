@@ -1,43 +1,55 @@
 <nav class="d-print-none">
-  <div class="nav nav-tabs" id="nav-tab" role="tablist">
-    <a class="nav-item nav-link active" id="nav-rankings-tab" data-toggle="tab" href="#nav-rankings" role="tab" aria-controls="nav-rankings" aria-selected="true">Rankings</a>
-    <a class="nav-item nav-link" id="nav-scores-received-tab" data-toggle="tab" href="#nav-scores-received" role="tab" aria-controls="nav-scores-received" aria-selected="false">Spirit Scores (Received)</a>
-    <a class="nav-item nav-link" id="nav-scores-awarded-tab" data-toggle="tab" href="#nav-scores-awarded" role="tab" aria-controls="nav-scores-awarded" aria-selected="false">Spirit Scores (Awarded)</a>
-  </div>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <a class="nav-item nav-link active" id="nav-rankings-tab" data-toggle="tab" href="#nav-rankings" role="tab" aria-controls="nav-rankings" aria-selected="true">Rankings</a>
+        <a class="nav-item nav-link" id="nav-scores-received-tab" data-toggle="tab" href="#nav-scores-received" role="tab" aria-controls="nav-scores-received" aria-selected="false">Spirit Scores (Received)</a>
+        <a class="nav-item nav-link" id="nav-scores-awarded-tab" data-toggle="tab" href="#nav-scores-awarded" role="tab" aria-controls="nav-scores-awarded" aria-selected="false">Spirit Scores (Awarded)</a>
+    </div>
 </nav>
 
 <div class="tab-content" id="nav-tabContent">
 
-  <div class="tab-pane fade show active" id="nav-rankings" role="tabpanel" aria-labelledby="nav-rankings-tab">
-    <div class="table-responsive">
-      {{ rankings.render() }}
+    <div class="tab-pane fade show active" id="nav-rankings" role="tabpanel" aria-labelledby="nav-rankings-tab">
+        <div class="table-responsive">
+            {{ rankings.render() }}
+        </div>
     </div>
-  </div>
 
-  <div class="tab-pane fade" id="nav-scores-received" role="tabpanel" aria-labelledby="nav-scores-received-tab">
-    {% for team, scores in received_scores %}
-    <div class="card border mb-5">
-      <div class="card-header text-center">
-        <strong>{{team}}</strong>
-      </div>
-      <div class="card-body table-responsive">
-        {{ scores.to_html(index=False, classes=['table', 'table-striped'], border=0, float_format='%d', justify='left') }}
-      </div>
+    <div class="tab-pane fade" id="nav-scores-received" role="tabpanel" aria-labelledby="nav-scores-received-tab">
+        {% for team, scores in received_scores %}
+            <div class="card border mb-5">
+                <div class="card-header text-center">
+                    <strong>{{team}}</strong>
+                </div>
+                <div class="card-body table-responsive">
+                    {{ scores.to_html(index=False, classes=['table', 'table-striped'], border=0, float_format='%d', justify='left') }}
+                </div>
+            </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-  </div>
 
-  <div class="tab-pane fade" id="nav-scores-awarded" role="tabpanel" aria-labelledby="nav-scores-awarded-tab">
-    {% for team, scores in awarded_scores %}
-    <div class="card border mb-5">
-      <div class="card-header text-center">
-        <strong>{{team}}</strong>
-      </div>
-      <div class="card-body table-responsive">
-        {{ scores.to_html(index=False, classes=['table', 'table-striped'], border=0, float_format='%d', justify='left') }}
-      </div>
+    <div class="tab-pane fade" id="nav-scores-awarded" role="tabpanel" aria-labelledby="nav-scores-awarded-tab">
+        {% for team, scores in awarded_scores %}
+            <div class="card border mb-5">
+                <div class="card-header text-center">
+                    <strong>{{team}}</strong>
+                </div>
+                <div class="card-body table-responsive">
+                    {{ scores.to_html(index=False, classes=['table', 'table-striped'], border=0, float_format='%d', justify='left') }}
+                </div>
+            </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-  </div>
 
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.js"></script>
+<script>
+ domtoimage.toPng(document.getElementById('nav-rankings'), { quality: 0.95, bgcolor: '#ffffff' })
+           .then(function (dataUrl) {
+               var link = document.createElement('a');
+               link.download = 'rankings.png';
+               link.href = dataUrl;
+               link.text = "Download";
+               document.getElementById('nav-rankings').append(link);
+           });
+</script>

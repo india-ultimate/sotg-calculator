@@ -44,7 +44,8 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.js"></script>
 <script>
- domtoimage.toPng(document.getElementById('nav-rankings'), { quality: 0.95, bgcolor: '#ffffff' })
+ var table = document.querySelector('#nav-rankings > .table-responsive');
+ domtoimage.toPng(table, { quality: 0.95, bgcolor: '#ffffff', width: table.scrollWidth })
            .then(function (dataUrl) {
                var link = document.createElement('a');
                link.download = 'rankings.png';

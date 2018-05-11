@@ -10,6 +10,7 @@ from scorer import SOTGScorer, InvalidURLException
 
 HERE = dirname(abspath(__file__))
 README = join(HERE, 'README.md')
+DEBUG = 'DEBUG' in os.environ
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', 'Super secret key')
 if 'DYNO' in os.environ:
@@ -56,8 +57,7 @@ def index():
     errors = []
     prompt_column_select = False
     if not url:
-        if 'url' in request.args:
-            errors.append('Please supply a Google Sheets URL')
+        pass
     elif not all(columns.values()):
         try:
             scorer = SOTGScorer(url)
@@ -102,4 +102,5 @@ def index():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.jinja_env.cache = None
+    app.run(debug=DEBUG)

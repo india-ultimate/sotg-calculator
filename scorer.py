@@ -116,22 +116,6 @@ class SOTGScorer:
             self._teams = sorted(teams | opponents)
         return self._teams
 
-    def _make_scores_numbers(self):
-        """Convert str score columns to numbers"""
-        data = self.data
-        opponent_scores = data[self.opponent_score_columns]
-        if not opponent_scores.dtypes.apply(
-            lambda x: x.type == pd.np.float64
-        ).all():
-            data[self.opponent_score_columns] = opponent_scores.applymap(
-                to_numbers
-            )
-        self_scores = data[self.team_score_columns]
-        if not self_scores.dtypes.apply(
-            lambda x: x.type == pd.np.float64
-        ).all():
-            data[self.team_score_columns] = self_scores.applymap(to_numbers)
-
     @property
     def rankings(self):
         """Return spirit rankings given data, teams, and column names.
@@ -214,6 +198,15 @@ class SOTGScorer:
         """Return rankings, received and awarded scores."""
         return self.rankings, self.received_scores, self.awarded_scores
 
+    def _bold_columns(self, column):
+        """Set font-weight if column needs to be bold"""
+        return [
+            'font-weight: 700;' if column.name in {
+                'Rank', 'Team', 'Avg spirit score'
+            } else ''
+            for _ in column
+        ]
+
     def _get_received_scores(self, team):
         """Return all the spirit scores received by the specified team."""
         columns = [
@@ -234,11 +227,18 @@ class SOTGScorer:
         scores = self.data[self.data[self.team_column] == team][columns]
         return scores
 
-    def _bold_columns(self, column):
-        """Set font-weight if column needs to be bold"""
-        return [
-            'font-weight: 700;' if column.name in {
-                'Rank', 'Team', 'Avg spirit score'
-            } else ''
-            for _ in column
-        ]
+    def _make_scores_numbers(self):
+        """Convert str score columns to numbers"""
+        data = self.data
+        opponent_scores = data[self.opponent_score_columns]
+        if not opponent_scores.dtypes.apply(
+            lambda x: x.type == pd.np.float64
+        ).all():
+            data[self.opponent_score_columns] = opponent_scores.applymap(
+                to_numbers
+            )
+        self_scores = data[self.team_score_columns]
+        if not self_scores.dtypes.apply(
+            lambda x: x.type == pd.np.float64
+        ).all():
+            data[self.team_score_columns] = self_scores.applymap(to_numbers)

@@ -101,6 +101,18 @@ def index():
     )
 
 
+def format_scores(scores):
+    return scores.to_html(
+        index=False,
+        classes=['table', 'table-striped'],
+        na_rep='-',
+        border=0,
+        float_format='%d',
+        justify='left',
+    )
+
+
+app.jinja_env.filters['format_scores'] = format_scores
 if __name__ == '__main__':
     app.jinja_env.cache = None
     app.run(debug=DEBUG)

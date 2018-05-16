@@ -28,7 +28,7 @@
                     <strong>{{team}}</strong>
                 </div>
                 <div class="card-body table-responsive">
-                    {{ scores.to_html(index=False, classes=['table', 'table-striped'], na_rep='-', border=0, float_format='%d', justify='left') }}
+                    {{ scores|format_scores }}
                 </div>
             </div>
         {% endfor %}
@@ -49,7 +49,7 @@
                     <strong>{{team}}</strong>
                 </div>
                 <div class="card-body table-responsive">
-                    {{ scores.to_html(index=False, classes=['table', 'table-striped'], na_rep='-', border=0, float_format='%d', justify='left') }}
+                    {{ scores|format_scores }}
                 </div>
             </div>
         {% endfor %}

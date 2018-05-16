@@ -208,24 +208,90 @@ class SOTGScorer:
         ]
 
     def _get_received_scores(self, team):
-        """Return all the spirit scores received by the specified team."""
+        """Return all the spirit scores received by the specified team
+
+        Also, appends the self scores for that match, beside the scores
+        received.
+
+        """
         columns = [
             self.team_column, self.day_column
         ] + self.opponent_score_columns + [
             TOTAL_SCORE_COLUMN
         ]
         scores = self.data[self.data[self.opponent_column] == team][columns]
-        return scores.rename(columns={self.team_column: 'Scored by'})
+        team_columns = [
+            self.opponent_column, self.day_column
+        ] + self.team_score_columns + [
+            TOTAL_SELF_SCORE_COLUMN
+        ]
+        team_scores = self.data[self.data[self.team_column] == team][
+            team_columns
+        ]
+        merged_scores = scores.merge(
+            team_scores,
+            how='outer',
+            left_on=[self.team_column, self.day_column],
+            right_on=[self.opponent_column, self.day_column],
+        )
+        # Replace NaN in team column with names from opponent column (self scores)
+        merged_scores[self.team_column] = merged_scores[self.team_column].mask(
+            pd.isna, merged_scores[self.opponent_column]
+        )
+        columns = [
+            self.team_column, self.day_column
+        ] + self.opponent_score_columns + [
+            TOTAL_SCORE_COLUMN
+        ] + self.team_score_columns + [
+            TOTAL_SELF_SCORE_COLUMN
+        ]
+        display_scores = merged_scores[columns].rename(
+            columns={self.team_column: 'Scored by'}
+        )
+        return display_scores
 
     def _get_awarded_scores(self, team):
-        """Return all the spirit scores awarded by the specified team."""
+        """Return all the spirit scores awarded by the specified team.
+
+
+        Also, appends the self scores of the team for that match, beside the
+        scores awarded
+
+        """
         columns = [
             self.opponent_column, self.day_column
         ] + self.opponent_score_columns + [
             TOTAL_SCORE_COLUMN
         ]
         scores = self.data[self.data[self.team_column] == team][columns]
-        return scores
+        team_columns = [
+            self.team_column, self.day_column
+        ] + self.team_score_columns + [
+            TOTAL_SELF_SCORE_COLUMN
+        ]
+        team_scores = self.data[self.data[self.opponent_column] == team][
+            team_columns
+        ]
+        merged_scores = scores.merge(
+            team_scores,
+            how='outer',
+            left_on=[self.opponent_column, self.day_column],
+            right_on=[self.team_column, self.day_column],
+        )
+        # Replace NaN in team column with names from opponent column (self scores)
+        merged_scores[self.opponent_column] = merged_scores[
+            self.opponent_column
+        ].mask(
+            pd.isna, merged_scores[self.team_column]
+        )
+        columns = [
+            self.opponent_column, self.day_column
+        ] + self.opponent_score_columns + [
+            TOTAL_SCORE_COLUMN
+        ] + self.team_score_columns + [
+            TOTAL_SELF_SCORE_COLUMN
+        ]
+        return merged_scores[columns]
 
     def _make_scores_numbers(self):
         """Convert str score columns to numbers"""

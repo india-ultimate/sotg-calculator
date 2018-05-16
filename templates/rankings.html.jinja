@@ -15,6 +15,13 @@
     </div>
 
     <div class="tab-pane fade" id="nav-scores-received" role="tabpanel" aria-labelledby="nav-scores-received-tab">
+        <div>
+            <p>
+                Each of the table below shows the scores received by a team (say A) from all the opponents (say,
+                B, C, D, ...) they played against, compared against the
+                self-scores the team (A) gave themselves in those matches.
+            </p>
+        </div>
         {% for team, scores in received_scores %}
             <div class="card border mb-5">
                 <div class="card-header text-center">
@@ -28,6 +35,14 @@
     </div>
 
     <div class="tab-pane fade" id="nav-scores-awarded" role="tabpanel" aria-labelledby="nav-scores-awarded-tab">
+        <div>
+            <p>
+                Each of the table below shows the scores awarded by a team (say A) to all the opponents (say,
+                B, C, D, ...) they played against, compared against the
+                self-scores the teams (B,
+                C, D, ...) gave themselves in those matches.
+            </p>
+        </div>
         {% for team, scores in awarded_scores %}
             <div class="card border mb-5">
                 <div class="card-header text-center">

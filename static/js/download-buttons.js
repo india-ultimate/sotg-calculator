@@ -6,10 +6,15 @@ var export_png = function(e, tab) {
   domtoimage
     .toPng(tab, { quality: 0.95, bgcolor: "#ffffff", width: table.scrollWidth })
     .then(function(dataUrl) {
+      var image_name =
+        tab.id
+          .split("-")
+          .splice(1)
+          .join("-") + ".png";
       var link = $("<a>")
         .text("Download")
         .attr("href", dataUrl)
-        .attr("download", "rankings.png")
+        .attr("download", image_name)
         .appendTo(tab);
     });
 };

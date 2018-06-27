@@ -4,7 +4,7 @@ An interactive web-app to manage spirit scores for a tournament.
 
 ## Usage
 
-1. Use a copy of <a href="https://docs.google.com/spreadsheets/d/1q3Zr1IbbL6r87UpGkQ-D9hyJtw6cP8GlVLVRvFkVACU/edit#gid=1141649430" target="_blank_">this form</a> for accepting spirit scores <!-- see-more-link -->
+1. Use a copy of <a href="https://docs.google.com/spreadsheets/d/16d4gBNwR2mTrNbB5tq2REGjH-03T4GX701ueOvT-cDo/edit#gid=1545695387" target="_blank_">this form</a> for accepting spirit scores <!-- see-more-link -->
 1. Copy and paste the response spreadsheet URL into the URL entry box (`Google
    Sheets URL here...`).
 1. Click `Calculate Ranks`
@@ -17,7 +17,8 @@ An interactive web-app to manage spirit scores for a tournament.
 <!-- More -->
 ### Copying and using the form template
 
-- Make a copy of <a href="https://docs.google.com/spreadsheets/d/1q3Zr1IbbL6r87UpGkQ-D9hyJtw6cP8GlVLVRvFkVACU/edit#gid=1141649430" target="_blank_">the response sheet</a> by navigating to `File > Make a
+
+- Make a copy of <a href="https://docs.google.com/spreadsheets/d/16d4gBNwR2mTrNbB5tq2REGjH-03T4GX701ueOvT-cDo/edit#gid=1545695387" target="_blank_">the response sheet</a> by navigating to `File > Make a
   copy...`. (*NOTE:* You need to be signed into your Google account)
 - From the copied spreadsheet, open the Google form by navigating to `Form >
   Edit form`

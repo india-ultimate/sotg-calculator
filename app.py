@@ -40,6 +40,16 @@ def get_usage():
     return usage, more_usage
 
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+
+@app.route('/demo')
+def demo():
+    return render_template('demo.html')
+
+
 @app.route('/', methods=['GET'])
 def index():
     url = request.args.get('url')

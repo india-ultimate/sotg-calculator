@@ -1,8 +1,6 @@
 {% extends "base.html.jinja" %}
 {% block content %}
 
-    <a class="d-print-none" href="{{url_for('index')}}"><h1>SOTG Calculator</h1></a>
-
     {% if url is not none and rankings is not none and not prompt_column_select %}
 
         {% include "rankings.html.jinja" %}

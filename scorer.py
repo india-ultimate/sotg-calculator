@@ -2,6 +2,7 @@
 from urllib.parse import urlparse
 
 import pandas as pd
+import requests
 
 TEAM_COLUMN = 'Your Team'
 OPPONENT_COLUMN = 'Opponent Team'
@@ -36,6 +37,11 @@ def to_numbers(x):
     return x
 
 
+def requires_login(url):
+    response = requests.get(url)
+    return response.url.startswith('https://accounts.google.com')
+
+
 class InvalidURLException(Exception):
     pass
 
@@ -54,10 +60,15 @@ class SOTGScorer:
         """Return the export URL from a spreadsheet URL."""
         parsed = urlparse(url)
         if not parsed.netloc == cls.NETLOC:
-            raise InvalidURLException('Not a google spreadsheets URL')
+            raise InvalidURLException('Not a google spreadsheet URL')
 
         if not parsed.path.startswith(cls.PATH_PREFIX):
-            raise InvalidURLException('Not a google spreadsheets URL')
+            raise InvalidURLException('Not a google spreadsheet URL')
+
+        if requires_login(url):
+            raise InvalidURLException(
+                'Spreadsheet is not accessible without login'
+            )
 
         key = parsed.path.split('/')[3]
         return 'https://{netloc}{path}{key}/export?format=csv'.format(

@@ -52,8 +52,7 @@ def demo():
     return render_template("demo.html")
 
 
-@app.route("/", methods=["GET"])
-def index():
+def _parse_args():
     url = request.args.get("url")
     columns = {
         "team": request.args.get("team"),
@@ -64,6 +63,13 @@ def index():
             "opponent-score-columns"
         ),
     }
+    page = request.args.get("page")
+    return url, columns, page
+
+
+@app.route("/", methods=["GET"])
+def index():
+    url, columns, page = _parse_args()
     rankings = None
     received_scores = awarded_scores = all_columns = []
     errors = []
@@ -110,6 +116,7 @@ def index():
         rankings=rankings,
         received_scores=received_scores,
         awarded_scores=awarded_scores,
+        page=page,
     )
 
 

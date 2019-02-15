@@ -91,6 +91,10 @@ def index():
                     "Some columns are named differently. "
                     "Please select the columns to use for the calculations"
                 )
+            except RuntimeError as e:
+                errors.append(e.args[0])
+                prompt_column_select = False
+
             except Exception as e:
                 print(repr(e))
                 prompt_column_select = True

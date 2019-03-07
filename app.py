@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 import os
 from os.path import abspath, dirname, join
+from urllib.parse import urlparse, urlunparse
 
-from flask import flash, Flask, render_template, request
+from flask import flash, Flask, redirect, render_template, request
 from flask_sslify import SSLify
 import mistune
 
@@ -40,6 +41,16 @@ def get_usage():
         button_code = f.read().strip()
     usage = usage.replace("<!-- see-more-link -->", button_code)
     return usage, more_usage
+
+
+@app.before_request
+def redirect_heroku():
+    """Redirect herokuapp requests to indiaultimate.org."""
+    urlparts = urlparse(request.url)
+    if urlparts.netloc == "sotg-calculator.herokuapp.com":
+        urlparts_list = list(urlparts)
+        urlparts_list[1] = "sotg.indiaultimate.org"
+        return redirect(urlunparse(urlparts_list), code=301)
 
 
 @app.route("/about")

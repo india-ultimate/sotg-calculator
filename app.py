@@ -4,7 +4,6 @@ from os.path import abspath, dirname, join
 from urllib.parse import urlparse, urlunparse
 
 from flask import flash, Flask, redirect, render_template, request
-from flask_sslify import SSLify
 import mistune
 
 from scorer import SOTGScorer, InvalidURLException
@@ -14,9 +13,6 @@ README = join(HERE, "README.md")
 DEBUG = "DEBUG" in os.environ
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "Super secret key")
-if "DYNO" in os.environ:
-    # only trigger SSLify if the app is running on Heroku
-    sslify = SSLify(app)
 
 
 def get_usage():

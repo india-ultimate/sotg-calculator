@@ -110,7 +110,11 @@ def index():
                 )
     else:
         scorer = SOTGScorer(url, columns=columns)
-        rankings, received_scores, awarded_scores = scorer.all_scores
+        try:
+            rankings, received_scores, awarded_scores = scorer.all_scores
+        except Exception as e:
+            errors.append(e.args[0])
+            prompt_column_select = False
         all_columns = list(scorer.data.columns)
     for e in errors:
         flash(e, "error")

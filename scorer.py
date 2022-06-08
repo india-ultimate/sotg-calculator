@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from urllib.parse import urlparse
 
+import numpy as np
 import pandas as pd
 import requests
 
@@ -139,7 +140,7 @@ class SOTGScorer:
         data = self.data
         self._make_scores_numbers()
         self._fix_team_names()
-        d_int = pd.np.int
+        d_int = np.int
         # Compute aggregate scores
         total_score = data[self.opponent_score_columns].sum(axis=1)
         data[TOTAL_SCORE_COLUMN] = total_score
@@ -312,14 +313,14 @@ class SOTGScorer:
         data = self.data
         opponent_scores = data[self.opponent_score_columns]
         if not opponent_scores.dtypes.apply(
-            lambda x: x.type == pd.np.float64
+            lambda x: x.type == np.float64
         ).all():
             data[self.opponent_score_columns] = opponent_scores.applymap(
                 to_numbers
             )
         self_scores = data[self.team_score_columns]
         if not self_scores.dtypes.apply(
-            lambda x: x.type == pd.np.float64
+            lambda x: x.type == np.float64
         ).all():
             data[self.team_score_columns] = self_scores.applymap(to_numbers)
 

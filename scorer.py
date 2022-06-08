@@ -179,7 +179,7 @@ class SOTGScorer:
         rankings = rankings[column_order]
         # Styling
         rankings = (
-            rankings.style.set_precision("4")
+            rankings.style.set_precision("2")
             .set_table_attributes(
                 'border="0" class="dataframe table table-hover table-striped"'
             )

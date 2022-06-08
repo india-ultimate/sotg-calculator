@@ -158,7 +158,7 @@ class SOTGScorer:
         rankings = pd.DataFrame([score, self_score], dtype=d_int).transpose()
         rankings["Avg spirit score"] = avg_score
         rankings["Avg self spirit score"] = avg_self_score
-        rankings["Difference"] = avg_score - avg_self_score
+        rankings["Avg score difference"] = avg_score - avg_self_score
         # Compute and order by ranks
         # FIXME: This is such a mess!
         rankings = rankings.sort_values("Avg spirit score", ascending=False)
@@ -170,11 +170,11 @@ class SOTGScorer:
         column_order = [
             "Rank",
             "Team",
-            "Score",
-            "Self Score",
             "Avg spirit score",
             "Avg self spirit score",
-            "Difference",
+            "Score",
+            "Self Score",
+            "Avg score difference",
         ]
         rankings = rankings[column_order]
         # Styling

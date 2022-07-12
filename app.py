@@ -3,6 +3,7 @@ import os
 from os.path import abspath, dirname, join
 from urllib.parse import urlparse, urlunparse
 
+from cryptography.fernet import Fernet
 from flask import flash, Flask, redirect, render_template, request, url_for
 import mistune
 
@@ -11,6 +12,9 @@ from scorer import SOTGScorer, InvalidURLException, gsheet_id
 HERE = dirname(abspath(__file__))
 README = join(HERE, "README.md")
 DEBUG = "DEBUG" in os.environ
+FERNET_KEY = os.getenv(
+    "FERNET_KEY", "fJmpQZpowvAPFiYu4fPT0-dKRbd2h_Mvy7XXsuf9FdE="
+).encode()
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "Super secret key")
 
@@ -69,6 +73,16 @@ def _parse_args():
     return url, sheet_id, columns, page
 
 
+def f_encrypt(text):
+    f = Fernet(FERNET_KEY)
+    return f.encrypt(text.encode()).decode()
+
+
+def f_decrypt(token):
+    f = Fernet(FERNET_KEY)
+    return f.decrypt(token.encode()).decode()
+
+
 @app.route("/", methods=["GET"])
 def index():
     url, sheet_id, columns, page = _parse_args()
@@ -81,10 +95,11 @@ def index():
     if not url and not sheet_id:
         pass
     elif not sheet_id:
-        sheet_id = gsheet_id(url)
+        sheet_id = f_encrypt(gsheet_id(url))
         return redirect(url_for("index", sheet_id=sheet_id, page=page, **columns))
     elif not all(columns.values()):
         try:
+            sheet_id = f_decrypt(sheet_id)
             scorer = SOTGScorer(sheet_id)
             show_rankings = scorer.show_rankings
         except InvalidURLException as e:

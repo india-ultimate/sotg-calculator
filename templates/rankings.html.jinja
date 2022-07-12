@@ -46,12 +46,12 @@
                   {{ scores|format_scores }}
                   {% if missing_our or missing_other %}
                   <div class="card-text form-text text-muted">
-                    <ul>
+                    <ul class="alert alert-warning">
                       {% for (name, day) in missing_our %}
-                      <li> {{team}} has not submitted scores for the game against {{name}} on {{day}}</li>
+                      <li><small>{{team}} has not submitted scores for the game against {{name}} on {{day}}</small></li>
                       {% endfor %}
                       {% for (name, day) in missing_other %}
-                      <li> {{name}} has not submitted scores for the game against {{team}} on {{day}}</li>
+                      <li><small>{{name}} has not submitted scores for the game against {{team}} on {{day}}</small></li>
                       {% endfor %}
                     </ul>
                   </div>
@@ -77,12 +77,12 @@
                   {{ scores|format_scores }}
                   {% if missing_our or missing_other %}
                   <div class="card-text form-text text-muted">
-                    <ul>
+                    <ul class="alert alert-warning">
                       {% for (name, day) in missing_our %}
-                      <li> {{team}} has not submitted scores for the game against {{name}} on {{day}}</li>
+                      <li><small>{{team}} has not submitted scores for the game against {{name}} on {{day}}</small></li>
                       {% endfor %}
                       {% for (name, day) in missing_other %}
-                      <li> {{name}} has not submitted scores for the game against {{team}} on {{day}}</li>
+                      <li><small>{{name}} has not submitted scores for the game against {{team}} on {{day}}</small></li>
                       {% endfor %}
                     </ul>
                   </div>

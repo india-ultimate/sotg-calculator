@@ -3,10 +3,10 @@ import os
 from os.path import abspath, dirname, join
 from urllib.parse import urlparse, urlunparse
 
-from flask import flash, Flask, redirect, render_template, request
+from flask import flash, Flask, redirect, render_template, request, url_for
 import mistune
 
-from scorer import SOTGScorer, InvalidURLException
+from scorer import SOTGScorer, InvalidURLException, gsheet_id
 
 HERE = dirname(abspath(__file__))
 README = join(HERE, "README.md")
@@ -57,6 +57,7 @@ def demo():
 
 def _parse_args():
     url = request.args.get("url")
+    sheet_id = request.args.get("sheet_id")
     columns = {
         "team": request.args.get("team"),
         "opponent": request.args.get("opponent"),
@@ -65,22 +66,26 @@ def _parse_args():
         "opponent-score-columns": request.args.getlist("opponent-score-columns"),
     }
     page = request.args.get("page")
-    return url, columns, page
+    return url, sheet_id, columns, page
 
 
 @app.route("/", methods=["GET"])
 def index():
-    url, columns, page = _parse_args()
+    url, sheet_id, columns, page = _parse_args()
     rankings = None
     received_scores = awarded_scores = all_columns = []
     errors = []
     prompt_column_select = False
     show_rankings = False
-    if not url:
+
+    if not url and not sheet_id:
         pass
+    elif not sheet_id:
+        sheet_id = gsheet_id(url)
+        return redirect(url_for("index", sheet_id=sheet_id, page=page, **columns))
     elif not all(columns.values()):
         try:
-            scorer = SOTGScorer(url)
+            scorer = SOTGScorer(sheet_id)
             show_rankings = scorer.show_rankings
         except InvalidURLException as e:
             errors.append("Invalid URL - {}".format(e))
@@ -105,7 +110,7 @@ def index():
                     "Unknown Error: Try selecting the columns to use for the calculations"
                 )
     else:
-        scorer = SOTGScorer(url, columns=columns)
+        scorer = SOTGScorer(sheet_id, columns=columns)
         show_rankings = scorer.show_rankings
         try:
             rankings, received_scores, awarded_scores = scorer.all_scores
@@ -123,7 +128,7 @@ def index():
         more_usage=more_usage,
         columns=columns,
         all_columns=all_columns,
-        url=url,
+        url=scorer.url if sheet_id else url,
         prompt_column_select=prompt_column_select,
         rankings=rankings,
         show_rankings=show_rankings,

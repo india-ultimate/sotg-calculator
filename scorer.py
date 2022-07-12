@@ -7,6 +7,9 @@ import numpy as np
 import pandas as pd
 import requests
 
+GSHEET_NETLOC = "docs.google.com"
+GSHEET_PATH_PREFIX = "/spreadsheets/d/"
+
 TEAM_COLUMN = "Your Team"
 OPPONENT_COLUMN = "Opponent Team"
 OPPONENT_SCORE_COLUMNS = [
@@ -45,6 +48,25 @@ def requires_login(url):
     return response.url.startswith("https://accounts.google.com")
 
 
+def gsheet_id(url):
+    parsed = urlparse(url)
+    if not parsed.netloc == GSHEET_NETLOC:
+        raise InvalidURLException("Not a google spreadsheet URL")
+
+    if not parsed.path.startswith(GSHEET_PATH_PREFIX):
+        raise InvalidURLException("Not a google spreadsheet URL")
+
+    if requires_login(url):
+        raise InvalidURLException("Spreadsheet is not accessible without login")
+
+    return parsed.path.split("/")[3]
+
+
+def export_url(sheet_id):
+    """Return the export URL using sheet_id."""
+    return f"https://{GSHEET_NETLOC}{GSHEET_PATH_PREFIX}{sheet_id}/export?format=csv"
+
+
 class InvalidURLException(Exception):
     pass
 
@@ -52,11 +74,8 @@ class InvalidURLException(Exception):
 class SOTGScorer:
     """A class to do all the spirit scoring"""
 
-    NETLOC = "docs.google.com"
-    PATH_PREFIX = "/spreadsheets/d/"
-
-    def __init__(self, url, columns=None):
-        self.url = self.get_export_url(url)
+    def __init__(self, sheet_id, columns=None):
+        self.url = export_url(sheet_id)
         self.csv, self.show_rankings = self.get_csv_and_mode()
         self.columns = columns or {}
 
@@ -66,24 +85,6 @@ class SOTGScorer:
         match = re.search('filename="(.*)"', header)
         name = match.group(1) if match else "metadata.csv"
         return response.text, "show-rankings" in name
-
-    @classmethod
-    def get_export_url(cls, url):
-        """Return the export URL from a spreadsheet URL."""
-        parsed = urlparse(url)
-        if not parsed.netloc == cls.NETLOC:
-            raise InvalidURLException("Not a google spreadsheet URL")
-
-        if not parsed.path.startswith(cls.PATH_PREFIX):
-            raise InvalidURLException("Not a google spreadsheet URL")
-
-        if requires_login(url):
-            raise InvalidURLException("Spreadsheet is not accessible without login")
-
-        key = parsed.path.split("/")[3]
-        return "https://{netloc}{path}{key}/export?format=csv".format(
-            netloc=cls.NETLOC, path=cls.PATH_PREFIX, key=key
-        )
 
     @property
     def data(self):

@@ -38,13 +38,25 @@
                 self-scores the team (A) gave themselves in those matches.
             </p>
         </div>
-        {% for team, scores in received_scores %}
+        {% for team, (scores, missing_our, missing_other) in received_scores %}
             <div class="card border mb-5">
                 <div class="card-header text-center">
                     <strong>{{team}}</strong>
                 </div>
                 <div class="card-body table-responsive">
                     {{ scores|format_scores }}
+                    {% if missing_our or missing_other %}
+                    <div class="card-text form-text text-muted">
+                      <ul>
+                        {% for (name, day) in missing_our %}
+                        <li> {{team}} has not submitted scores for the game against {{name}} on {{day}}</li>
+                        {% endfor %}
+                        {% for (name, day) in missing_other %}
+                        <li> {{name}} has not submitted scores for the game against {{team}} on {{day}}</li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         {% endfor %}
@@ -59,13 +71,25 @@
                 C, D, ...) gave themselves in those matches.
             </p>
         </div>
-        {% for team, scores in awarded_scores %}
+        {% for team, (scores, missing_our, missing_other) in awarded_scores %}
             <div class="card border mb-5">
                 <div class="card-header text-center">
                     <strong>{{team}}</strong>
                 </div>
                 <div class="card-body table-responsive">
-                    {{ scores|format_scores }}
+                  {{ scores|format_scores }}
+                  {% if missing_our or missing_other %}
+                  <div class="card-text form-text text-muted">
+                    <ul>
+                      {% for (name, day) in missing_our %}
+                      <li> {{team}} has not submitted scores for the game against {{name}} on {{day}}</li>
+                      {% endfor %}
+                      {% for (name, day) in missing_other %}
+                      <li> {{name}} has not submitted scores for the game against {{team}} on {{day}}</li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                  {% endif %}
                 </div>
             </div>
         {% endfor %}

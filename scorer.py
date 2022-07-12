@@ -67,6 +67,18 @@ def export_url(sheet_id):
     return f"https://{GSHEET_NETLOC}{GSHEET_PATH_PREFIX}{sheet_id}/export?format=csv"
 
 
+def get_missing_scores(outer, inner, left_on, right_on):
+    outer_left = {tuple(s) for s in outer[left_on].fillna("").values if s[0]}
+    inner_left = {tuple(s) for s in inner[left_on].fillna("").values if s[0]}
+    missing_left = outer_left - inner_left
+
+    outer_right = {tuple(s) for s in outer[right_on].fillna("").values if s[0]}
+    inner_right = {tuple(s) for s in inner[right_on].fillna("").values if s[0]}
+    missing_right = outer_right - inner_right
+
+    return missing_left, missing_right
+
+
 class InvalidURLException(Exception):
     pass
 
@@ -245,11 +257,19 @@ class SOTGScorer:
             + [TOTAL_SELF_SCORE_COLUMN]
         )
         team_scores = self.data[self.data[self.team_column] == team][team_columns]
-        merged_scores = scores.merge(
-            team_scores,
-            how="outer",
-            left_on=[self.team_column, self.day_column],
-            right_on=[self.opponent_column, self.day_column],
+        left_on = [self.team_column, self.day_column]
+        right_on = [self.opponent_column, self.day_column]
+        merged_scores_inner = scores.merge(
+            team_scores, how="inner", left_on=left_on, right_on=right_on
+        )
+        merged_scores_outer = scores.merge(
+            team_scores, how="outer", left_on=left_on, right_on=right_on
+        )
+        missing_our, missing_other = get_missing_scores(
+            merged_scores_outer, merged_scores_inner, left_on, right_on
+        )
+        merged_scores = (
+            merged_scores_outer if self.show_rankings else merged_scores_inner
         )
         # Replace NaN in team column with names from opponent column (self scores)
         merged_scores[self.team_column] = merged_scores[self.team_column].mask(
@@ -265,7 +285,7 @@ class SOTGScorer:
         display_scores = merged_scores[columns].rename(
             columns={self.team_column: "Scored by"}
         )
-        return display_scores
+        return display_scores, missing_our, missing_other
 
     def _get_awarded_scores(self, team):
         """Return all the spirit scores awarded by the specified team.
@@ -287,11 +307,19 @@ class SOTGScorer:
             + [TOTAL_SELF_SCORE_COLUMN]
         )
         team_scores = self.data[self.data[self.opponent_column] == team][team_columns]
-        merged_scores = scores.merge(
-            team_scores,
-            how="outer",
-            left_on=[self.opponent_column, self.day_column],
-            right_on=[self.team_column, self.day_column],
+        left_on = [self.opponent_column, self.day_column]
+        right_on = [self.team_column, self.day_column]
+        merged_scores_outer = scores.merge(
+            team_scores, how="outer", left_on=left_on, right_on=right_on
+        )
+        merged_scores_inner = scores.merge(
+            team_scores, how="inner", left_on=left_on, right_on=right_on
+        )
+        missing_other, missing_our = get_missing_scores(
+            merged_scores_outer, merged_scores_inner, left_on, right_on
+        )
+        merged_scores = (
+            merged_scores_outer if self.show_rankings else merged_scores_inner
         )
         # Replace NaN in team column with names from opponent column (self scores)
         merged_scores[self.opponent_column] = merged_scores[self.opponent_column].mask(
@@ -304,7 +332,7 @@ class SOTGScorer:
             + self.team_score_columns
             + [TOTAL_SELF_SCORE_COLUMN]
         )
-        return merged_scores[columns]
+        return merged_scores[columns], missing_our, missing_other
 
     def _make_scores_numbers(self):
         """Convert str score columns to numbers"""

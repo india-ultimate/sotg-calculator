@@ -2,7 +2,7 @@
 <form method="GET" action="{{url_for('score')}}">
   <input type="hidden" name="sheet_id" value="{{sheet_id}}" placeholder="Google Sheets URL here..."/>
 
-
+  {% if opponent_column_missing %}
   <div class="form-group">
     <label for"opponent-name-column">Opponent Team Column</label>
     <small class="form-text">Select column with the name of the opponent team</small>
@@ -15,7 +15,9 @@
       {% endfor %}
     </select>
   </div>
+  {% endif %}
 
+  {% if opponent_scores_columns_missing %}
   <div class="form-group">
   <label>Opponent Scores Column Names</label>
   <small class="form-text">Select columns with the opponent spirit scores</small>
@@ -30,7 +32,9 @@
   </div>
   {% endfor %}
   </div>
+  {% endif %}
 
+  {% if team_column_missing %}
   <div class="form-group">
     <label for="self-team-column">Self Team Column</label>
     <small class="form-text">Select column with the name of the team doing scoring (self)</small>
@@ -43,7 +47,9 @@
       {% endfor %}
     </select>
   </div>
+  {% endif %}
 
+  {% if team_scores_columns_missing %}
   <div class="form-group">
     <label>Self Scores Column Names</label>
     <small class="form-text">Select columns with the self spirit scores</small>
@@ -58,7 +64,9 @@
     </div>
     {% endfor %}
   </div>
+  {% endif %}
 
+  {% if day_column_missing %}
   <div class="form-group">
     <label for"day-column">Day Column</label>
     <small class="form-text">Select column with the day information</small>
@@ -71,6 +79,7 @@
       {% endfor %}
     </select>
   </div>
+  {% endif %}
 
   <input type="submit" value="Calculate Ranks" class="col btn btn-primary"/>
 </form>

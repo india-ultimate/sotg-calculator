@@ -7,7 +7,17 @@ from cryptography.fernet import Fernet
 from flask import flash, Flask, redirect, render_template, request, url_for
 import mistune
 
-from scorer import SOTGScorer, InvalidURLException, gsheet_id, ALL_COLUMNS
+from scorer import (
+    SOTGScorer,
+    InvalidURLException,
+    gsheet_id,
+    ALL_COLUMNS,
+    OPPONENT_COLUMN,
+    OPPONENT_SCORE_COLUMNS,
+    TEAM_COLUMN,
+    TEAM_SCORE_COLUMNS,
+    DAY_COLUMN,
+)
 
 HERE = dirname(abspath(__file__))
 README = join(HERE, "README.md")
@@ -104,11 +114,6 @@ def score():
     _sheet_id = f_decrypt(sheet_id)
     scorer = SOTGScorer(_sheet_id, columns=columns)
     if scorer.missing_columns:
-        flash(
-            f"Some columns are missing: {scorer.missing_columns}."
-            f"Please select the columns to use for the calculations, "
-            f"or rename columns to match {ALL_COLUMNS}"
-        )
         all_columns = list(scorer.data.columns)
         return redirect(
             url_for(
@@ -140,12 +145,25 @@ def score():
 def columns():
     _, sheet_id, columns = _parse_args()
     all_columns = request.args.getlist("all_columns")
-    missing_columns = request.args.getlist("missing_columns")
+    missing_columns = set(request.args.getlist("missing_columns"))
+    flash(
+        f"Some columns are missing: {', '.join(missing_columns)}. "
+        f"Please select the columns to use for the calculations, "
+        f"or rename columns to match the following: {', '.join(ALL_COLUMNS)}."
+    )
     return render_template(
         "columns.html.jinja",
         all_columns=all_columns,
         # FIXME: Use missing_columns in template to make column selection form smaller
-        missing_columns=missing_columns,
+        opponent_column_missing=OPPONENT_COLUMN in missing_columns,
+        opponent_scores_columns_missing=bool(
+            missing_columns.intersection(set(OPPONENT_SCORE_COLUMNS))
+        ),
+        team_column_missing=TEAM_COLUMN in missing_columns,
+        team_scores_columns_missing=bool(
+            missing_columns.intersection(set(TEAM_SCORE_COLUMNS))
+        ),
+        day_column_missing=DAY_COLUMN in missing_columns,
         columns=columns,
         sheet_id=sheet_id,
     )

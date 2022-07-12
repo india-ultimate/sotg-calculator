@@ -75,6 +75,7 @@ def index():
     received_scores = awarded_scores = all_columns = []
     errors = []
     prompt_column_select = False
+    show_rankings = False
     if not url:
         pass
     elif not all(columns.values()):
@@ -104,6 +105,7 @@ def index():
                 )
     else:
         scorer = SOTGScorer(url, columns=columns)
+        show_rankings = scorer.show_rankings
         try:
             rankings, received_scores, awarded_scores = scorer.all_scores
         except Exception as e:
@@ -123,6 +125,7 @@ def index():
         url=url,
         prompt_column_select=prompt_column_select,
         rankings=rankings,
+        show_rankings=show_rankings,
         received_scores=received_scores,
         awarded_scores=awarded_scores,
         page=page,

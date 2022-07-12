@@ -26,6 +26,10 @@ $(function() {
   var score_pages = ["#nav-rankings", "#nav-scores-received", "#nav-scores-awarded"];
   score_pages.forEach(function(selector) {
     var tab = document.querySelector(selector);
+    var table = tab.querySelector('table');
+    if (!table) {
+      return;
+    }
     var link = $("<a>")
       .text("Create PNG")
       .attr("href", "#")

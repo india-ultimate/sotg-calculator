@@ -1,20 +1,36 @@
 <nav class="d-print-none">
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-        <a class="nav-item nav-link active" id="nav-rankings-tab" data-toggle="tab" href="#nav-rankings" role="tab" aria-controls="nav-rankings" aria-selected="true">Rankings</a>
-        <a class="nav-item nav-link" id="nav-scores-received-tab" data-toggle="tab" href="#nav-scores-received" role="tab" aria-controls="nav-scores-received" aria-selected="false">Spirit Scores (Received)</a>
+        <a class="nav-item nav-link {% if show_rankings %}active{% endif %}" id="nav-rankings-tab" data-toggle="tab" href="#nav-rankings" role="tab" aria-controls="nav-rankings" aria-selected="true">Rankings</a>
+        <a class="nav-item nav-link {% if not show_rankings %}active{% endif %}" id="nav-scores-received-tab" data-toggle="tab" href="#nav-scores-received" role="tab" aria-controls="nav-scores-received" aria-selected="false">Spirit Scores (Received)</a>
         <a class="nav-item nav-link" id="nav-scores-awarded-tab" data-toggle="tab" href="#nav-scores-awarded" role="tab" aria-controls="nav-scores-awarded" aria-selected="false">Spirit Scores (Awarded)</a>
     </div>
 </nav>
 
 <div class="tab-content" id="nav-tabContent">
 
-    <div class="tab-pane fade show active" id="nav-rankings" role="tabpanel" aria-labelledby="nav-rankings-tab">
+    <div class="tab-pane fade {% if show_rankings %}show active{% endif %}" id="nav-rankings" role="tabpanel" aria-labelledby="nav-rankings-tab">
+      {% if show_rankings %}
         <div class="table-responsive">
             {{ rankings.render() }}
         </div>
+      {% else %}
+        <p>
+        The final rankings are not shown until the end of the tournament.
+        </p>
+
+        <p>
+          <small class="form-text text-muted">
+            If you are the Spirit Director of the tournament, add a "show-rankings"
+            label in the name of the spreadsheet being used to display the final
+            rankings. Use this only at the end of the tournament to keep some
+            suspense about the winners for the participants of the tournament,
+            until the end.
+          </small>
+        </p>
+      {% endif %}
     </div>
 
-    <div class="tab-pane fade" id="nav-scores-received" role="tabpanel" aria-labelledby="nav-scores-received-tab">
+    <div class="tab-pane fade {% if not show_rankings %}show active{% endif %}" id="nav-scores-received" role="tabpanel" aria-labelledby="nav-scores-received-tab">
         <div class="alert alert-dark" role="alert">
             <p>
                 Each of the table below shows the scores received by a team (say A) from all the opponents (say,

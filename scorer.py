@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+import io
+import re
 from urllib.parse import urlparse
 
 import numpy as np
@@ -55,7 +57,15 @@ class SOTGScorer:
 
     def __init__(self, url, columns=None):
         self.url = self.get_export_url(url)
+        self.csv, self.show_rankings = self.get_csv_and_mode()
         self.columns = columns or {}
+
+    def get_csv_and_mode(self):
+        response = requests.get(self.url)
+        header = response.headers.get("Content-Disposition", "")
+        match = re.search('filename="(.*)"', header)
+        name = match.group(1) if match else "metadata.csv"
+        return response.text, "show-rankings" in name
 
     @classmethod
     def get_export_url(cls, url):
@@ -79,7 +89,7 @@ class SOTGScorer:
     def data(self):
         """Return the data as a Pandas DataFrame."""
         if not hasattr(self, "_data"):
-            self._data = pd.read_csv(self.url)
+            self._data = pd.read_csv(io.StringIO(self.csv))
             COLUMNS = self._data.columns
             columns = self.columns
             self.team_column = (

@@ -81,6 +81,7 @@ def index():
     elif not all(columns.values()):
         try:
             scorer = SOTGScorer(url)
+            show_rankings = scorer.show_rankings
         except InvalidURLException as e:
             errors.append("Invalid URL - {}".format(e))
         else:

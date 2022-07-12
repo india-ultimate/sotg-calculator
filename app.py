@@ -69,8 +69,7 @@ def _parse_args():
         "team-score-columns": request.args.getlist("team-score-columns"),
         "opponent-score-columns": request.args.getlist("opponent-score-columns"),
     }
-    page = request.args.get("page")
-    return url, sheet_id, columns, page
+    return url, sheet_id, columns
 
 
 def f_encrypt(text):
@@ -91,7 +90,7 @@ def index():
 
 @app.route("/score", methods=["GET"])
 def score():
-    url, sheet_id, columns, page = _parse_args()
+    url, sheet_id, columns = _parse_args()
     if not url and not sheet_id:
         return redirect(url_for("index"))
 
@@ -100,7 +99,7 @@ def score():
             sheet_id = f_encrypt(gsheet_id(url))
         except InvalidURLException as e:
             flash(str(e))
-        return redirect(url_for("score", sheet_id=sheet_id, page=page, **columns))
+        return redirect(url_for("score", sheet_id=sheet_id, **columns))
 
     _sheet_id = f_decrypt(sheet_id)
     scorer = SOTGScorer(_sheet_id, columns=columns)
@@ -133,7 +132,7 @@ def score():
 
 @app.route("/columns", methods=["GET"])
 def columns():
-    _, sheet_id, columns, _ = _parse_args()
+    _, sheet_id, columns = _parse_args()
     all_columns = request.args.getlist("all_columns")
     # FIXME: Could pass missing columns to make number of selections smaller
     return render_template(

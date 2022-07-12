@@ -111,7 +111,13 @@ def score():
         )
         all_columns = list(scorer.data.columns)
         return redirect(
-            url_for("columns", sheet_id=sheet_id, all_columns=all_columns, **columns)
+            url_for(
+                "columns",
+                sheet_id=sheet_id,
+                all_columns=all_columns,
+                missing_columns=list(scorer.missing_columns),
+                **columns,
+            )
         )
 
     try:
@@ -134,10 +140,12 @@ def score():
 def columns():
     _, sheet_id, columns = _parse_args()
     all_columns = request.args.getlist("all_columns")
-    # FIXME: Could pass missing columns to make number of selections smaller
+    missing_columns = request.args.getlist("missing_columns")
     return render_template(
         "columns.html.jinja",
         all_columns=all_columns,
+        # FIXME: Use missing_columns in template to make column selection form smaller
+        missing_columns=missing_columns,
         columns=columns,
         sheet_id=sheet_id,
     )

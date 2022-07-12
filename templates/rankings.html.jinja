@@ -31,52 +31,49 @@
     </div>
 
     <div class="tab-pane fade {% if not show_rankings %}show active{% endif %}" id="nav-scores-received" role="tabpanel" aria-labelledby="nav-scores-received-tab">
-        <div class="alert alert-dark" role="alert">
-            <p>
-                Each of the table below shows the scores received by a team (say A) from all the opponents (say,
-                B, C, D, ...) they played against, compared against the
-                self-scores the team (A) gave themselves in those matches.
-            </p>
-        </div>
         {% for team, (scores, missing_our, missing_other) in received_scores %}
             <div class="card border mb-5">
                 <div class="card-header text-center">
                     <strong>{{team}}</strong>
                 </div>
                 <div class="card-body table-responsive">
-                    {{ scores|format_scores }}
-                    {% if missing_our or missing_other %}
-                    <div class="card-text form-text text-muted">
-                      <ul>
-                        {% for (name, day) in missing_our %}
-                        <li> {{team}} has not submitted scores for the game against {{name}} on {{day}}</li>
-                        {% endfor %}
-                        {% for (name, day) in missing_other %}
-                        <li> {{name}} has not submitted scores for the game against {{team}} on {{day}}</li>
-                        {% endfor %}
-                      </ul>
-                    </div>
-                    {% endif %}
+                  <div class="card-subtitle text-muted text-center">
+                    <small>
+                      Table below compares the scores received by {{team}}
+                      against their own self-scores
+                    </small>
+                  </div>
+                  {{ scores|format_scores }}
+                  {% if missing_our or missing_other %}
+                  <div class="card-text form-text text-muted">
+                    <ul>
+                      {% for (name, day) in missing_our %}
+                      <li> {{team}} has not submitted scores for the game against {{name}} on {{day}}</li>
+                      {% endfor %}
+                      {% for (name, day) in missing_other %}
+                      <li> {{name}} has not submitted scores for the game against {{team}} on {{day}}</li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                  {% endif %}
                 </div>
             </div>
         {% endfor %}
     </div>
 
     <div class="tab-pane fade" id="nav-scores-awarded" role="tabpanel" aria-labelledby="nav-scores-awarded-tab">
-        <div class="alert alert-dark" role="alert">
-            <p>
-                Each of the table below shows the scores awarded by a team (say A) to all the opponents (say,
-                B, C, D, ...) they played against, compared against the
-                self-scores the teams (B,
-                C, D, ...) gave themselves in those matches.
-            </p>
-        </div>
         {% for team, (scores, missing_our, missing_other) in awarded_scores %}
             <div class="card border mb-5">
                 <div class="card-header text-center">
-                    <strong>{{team}}</strong>
+                  <strong>{{team}}</strong>
                 </div>
                 <div class="card-body table-responsive">
+                  <div class="card-subtitle text-muted text-center">
+                    <small>
+                    Table below compares the scores awarded by {{team}} to
+                    their opponents against the opponent's self-scores
+                    </small>
+                  </div>
                   {{ scores|format_scores }}
                   {% if missing_our or missing_other %}
                   <div class="card-text form-text text-muted">

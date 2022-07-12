@@ -130,7 +130,7 @@ class SOTGScorer:
             )
             self.opponent_column = (
                 COLUMNS[int(columns.get("opponent"))]
-                if columns.get("team")
+                if columns.get("opponent")
                 else OPPONENT_COLUMN
             )
             self.opponent_score_columns = (

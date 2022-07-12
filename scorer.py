@@ -155,7 +155,6 @@ class SOTGScorer:
         """
         data = self.data
         self._make_scores_numbers()
-        self._fix_team_names()
         d_int = np.int
         # Compute aggregate scores
         total_score = data[self.opponent_score_columns].sum(axis=1)
@@ -343,27 +342,3 @@ class SOTGScorer:
         self_scores = data[self.team_score_columns]
         if not self_scores.dtypes.apply(lambda x: x.type == np.float64).all():
             data[self.team_score_columns] = self_scores.applymap(to_numbers)
-
-    def _fix_team_names(self):
-        data = self.data
-        team = self.team_column
-        opponent = self.opponent_column
-        teams = set(data[data[team].notna()][team].unique())
-        opponents = set(data[data[opponent].notna()][opponent].unique())
-        n = len(teams - opponents)
-        if n == 0:
-            return
-        elif n > 1:
-            msg = "Fix incorrectly spelled or missing teams in {} and {}. ".format(
-                self.team_column, self.opponent_column
-            )
-            names = ", ".join(teams ^ opponents)
-            msg += "The following teams are mis-spelled or missing: {}".format(names)
-            raise RuntimeError(msg)
-        else:
-            name = list(teams - opponents)[0]
-            wrong_name = list(opponents - teams)[0]
-            self._data[self.opponent_column] = self._data[
-                self.opponent_column
-            ].str.replace(wrong_name, name)
-            print(self._data[self.opponent_column])

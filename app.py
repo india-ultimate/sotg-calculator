@@ -22,11 +22,7 @@ def get_usage():
         if not usage and not line.startswith("## Usage"):
             continue
 
-        elif (
-            usage
-            and line.startswith("## ")
-            and not line.startswith("## Usage")
-        ):
+        elif usage and line.startswith("## ") and not line.startswith("## Usage"):
             break
 
         else:
@@ -66,9 +62,7 @@ def _parse_args():
         "opponent": request.args.get("opponent"),
         "day": request.args.get("day"),
         "team-score-columns": request.args.getlist("team-score-columns"),
-        "opponent-score-columns": request.args.getlist(
-            "opponent-score-columns"
-        ),
+        "opponent-score-columns": request.args.getlist("opponent-score-columns"),
     }
     page = request.args.get("page")
     return url, columns, page

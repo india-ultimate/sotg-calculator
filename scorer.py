@@ -68,9 +68,7 @@ class SOTGScorer:
             raise InvalidURLException("Not a google spreadsheet URL")
 
         if requires_login(url):
-            raise InvalidURLException(
-                "Spreadsheet is not accessible without login"
-            )
+            raise InvalidURLException("Spreadsheet is not accessible without login")
 
         key = parsed.path.split("/")[3]
         return "https://{netloc}{path}{key}/export?format=csv".format(
@@ -90,10 +88,7 @@ class SOTGScorer:
                 else TEAM_COLUMN
             )
             self.team_score_columns = (
-                [
-                    COLUMNS[int(column)]
-                    for column in columns.get("team-score-columns")
-                ]
+                [COLUMNS[int(column)] for column in columns.get("team-score-columns")]
                 if columns.get("team-score-columns")
                 else TEAM_SCORE_COLUMNS
             )
@@ -111,9 +106,7 @@ class SOTGScorer:
                 else OPPONENT_SCORE_COLUMNS
             )
             self.day_column = (
-                COLUMNS[int(columns.get("day"))]
-                if columns.get("day")
-                else DAY_COLUMN
+                COLUMNS[int(columns.get("day"))] if columns.get("day") else DAY_COLUMN
             )
         return self._data
 
@@ -163,9 +156,7 @@ class SOTGScorer:
         # Compute and order by ranks
         # FIXME: This is such a mess!
         rankings = rankings.sort_values("Avg spirit score", ascending=False)
-        ranks = rankings["Avg spirit score"].rank(
-            method="min", ascending=False
-        )
+        ranks = rankings["Avg spirit score"].rank(method="min", ascending=False)
         rankings["Rank"] = pd.Series(ranks, dtype=d_int)
         rankings["Team"] = rankings.index
         column_order = [
@@ -242,9 +233,7 @@ class SOTGScorer:
             + self.team_score_columns
             + [TOTAL_SELF_SCORE_COLUMN]
         )
-        team_scores = self.data[self.data[self.team_column] == team][
-            team_columns
-        ]
+        team_scores = self.data[self.data[self.team_column] == team][team_columns]
         merged_scores = scores.merge(
             team_scores,
             how="outer",
@@ -286,9 +275,7 @@ class SOTGScorer:
             + self.team_score_columns
             + [TOTAL_SELF_SCORE_COLUMN]
         )
-        team_scores = self.data[self.data[self.opponent_column] == team][
-            team_columns
-        ]
+        team_scores = self.data[self.data[self.opponent_column] == team][team_columns]
         merged_scores = scores.merge(
             team_scores,
             how="outer",
@@ -296,9 +283,9 @@ class SOTGScorer:
             right_on=[self.team_column, self.day_column],
         )
         # Replace NaN in team column with names from opponent column (self scores)
-        merged_scores[self.opponent_column] = merged_scores[
-            self.opponent_column
-        ].mask(pd.isna, merged_scores[self.team_column])
+        merged_scores[self.opponent_column] = merged_scores[self.opponent_column].mask(
+            pd.isna, merged_scores[self.team_column]
+        )
         columns = (
             [self.opponent_column, self.day_column]
             + self.opponent_score_columns
@@ -312,16 +299,10 @@ class SOTGScorer:
         """Convert str score columns to numbers"""
         data = self.data
         opponent_scores = data[self.opponent_score_columns]
-        if not opponent_scores.dtypes.apply(
-            lambda x: x.type == np.float64
-        ).all():
-            data[self.opponent_score_columns] = opponent_scores.applymap(
-                to_numbers
-            )
+        if not opponent_scores.dtypes.apply(lambda x: x.type == np.float64).all():
+            data[self.opponent_score_columns] = opponent_scores.applymap(to_numbers)
         self_scores = data[self.team_score_columns]
-        if not self_scores.dtypes.apply(
-            lambda x: x.type == np.float64
-        ).all():
+        if not self_scores.dtypes.apply(lambda x: x.type == np.float64).all():
             data[self.team_score_columns] = self_scores.applymap(to_numbers)
 
     def _fix_team_names(self):
@@ -338,9 +319,7 @@ class SOTGScorer:
                 self.team_column, self.opponent_column
             )
             names = ", ".join(teams ^ opponents)
-            msg += "The following teams are mis-spelled or missing: {}".format(
-                names
-            )
+            msg += "The following teams are mis-spelled or missing: {}".format(names)
             raise RuntimeError(msg)
         else:
             name = list(teams - opponents)[0]

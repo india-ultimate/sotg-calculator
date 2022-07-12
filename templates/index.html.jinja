@@ -1,33 +1,19 @@
 {% extends "base.html.jinja" %}
 {% block content %}
+<!-- Display the form to get the Spreadsheet URL -->
+<div class="card card-body bg-light mb-3">
+  {{usage|safe}}
+  <div class="collapse" id="more-usage">
+    <div class="card card-body bg-light">
+      {{more_usage|safe}}
+    </div>
+  </div>
+</div>
 
-    {% if url is not none and rankings is not none and not prompt_column_select %}
-
-        {% include "rankings.html.jinja" %}
-
-    {% elif prompt_column_select %}
-
-        {% include "column-selection-form.html.jinja" %}
-
-    {% else %}
-
-        <!-- Display the form to get the Spreadsheet URL -->
-        <div class="card card-body bg-light mb-3">
-            {{usage|safe}}
-            <div class="collapse" id="more-usage">
-                <div class="card card-body bg-light">
-                    {{more_usage|safe}}
-                </div>
-            </div>
-        </div>
-
-        <form method="GET" class="row" action="{{url_for('index')}}">
-            <input type="text" class="col-md-9 form-control-lg" name="url" placeholder="Google Sheets URL here..." required>
-            <input type="submit" value="Calculate Ranks" class="col-md-3 btn btn-primary">
-        </form>
-
-    {% endif %}
-
+<form method="GET" class="row" action="{{url_for('score')}}">
+  <input type="text" class="col-md-9 form-control-lg" name="url" placeholder="Google Sheets URL here..." required>
+  <input type="submit" value="Calculate Ranks" class="col-md-3 btn btn-primary">
+</form>
 {% endblock %}
 
 {% block scripts %}

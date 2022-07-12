@@ -7,7 +7,7 @@ from cryptography.fernet import Fernet
 from flask import flash, Flask, redirect, render_template, request, url_for
 import mistune
 
-from scorer import SOTGScorer, InvalidURLException, gsheet_id
+from scorer import SOTGScorer, InvalidURLException, gsheet_id, ALL_COLUMNS
 
 HERE = dirname(abspath(__file__))
 README = join(HERE, "README.md")
@@ -85,71 +85,62 @@ def f_decrypt(token):
 
 @app.route("/", methods=["GET"])
 def index():
-    url, sheet_id, columns, page = _parse_args()
-    rankings = None
-    received_scores = awarded_scores = all_columns = []
-    errors = []
-    prompt_column_select = False
-    show_rankings = False
-
-    if not url and not sheet_id:
-        pass
-    elif not sheet_id:
-        sheet_id = f_encrypt(gsheet_id(url))
-        return redirect(url_for("index", sheet_id=sheet_id, page=page, **columns))
-    elif not all(columns.values()):
-        try:
-            sheet_id = f_decrypt(sheet_id)
-            scorer = SOTGScorer(sheet_id)
-            show_rankings = scorer.show_rankings
-        except InvalidURLException as e:
-            errors.append("Invalid URL - {}".format(e))
-        else:
-            all_columns = list(scorer.data.columns)
-            try:
-                rankings, received_scores, awarded_scores = scorer.all_scores
-            except KeyError as e:
-                prompt_column_select = True
-                errors.append(
-                    "Some columns are named differently. "
-                    "Please select the columns to use for the calculations"
-                )
-            except RuntimeError as e:
-                errors.append(e.args[0])
-                prompt_column_select = False
-
-            except Exception as e:
-                print(repr(e))
-                prompt_column_select = True
-                errors.append(
-                    "Unknown Error: Try selecting the columns to use for the calculations"
-                )
-    else:
-        scorer = SOTGScorer(sheet_id, columns=columns)
-        show_rankings = scorer.show_rankings
-        try:
-            rankings, received_scores, awarded_scores = scorer.all_scores
-        except Exception as e:
-            errors.append(e.args[0])
-            prompt_column_select = False
-        all_columns = list(scorer.data.columns)
-    for e in errors:
-        flash(e, "error")
     usage, more_usage = get_usage()
+    return render_template("index.html.jinja", usage=usage, more_usage=more_usage)
+
+
+@app.route("/score", methods=["GET"])
+def score():
+    url, sheet_id, columns, page = _parse_args()
+    if not url and not sheet_id:
+        return redirect(url_for("index"))
+
+    if not sheet_id:
+        try:
+            sheet_id = f_encrypt(gsheet_id(url))
+        except InvalidURLException as e:
+            flash(str(e))
+        return redirect(url_for("score", sheet_id=sheet_id, page=page, **columns))
+
+    _sheet_id = f_decrypt(sheet_id)
+    scorer = SOTGScorer(_sheet_id, columns=columns)
+    if scorer.missing_columns:
+        flash(
+            f"Some columns are missing: {scorer.missing_columns}."
+            f"Please select the columns to use for the calculations, "
+            f"or rename columns to match {ALL_COLUMNS}"
+        )
+        all_columns = list(scorer.data.columns)
+        return redirect(
+            url_for("columns", sheet_id=sheet_id, all_columns=all_columns, **columns)
+        )
+
+    try:
+        rankings, received_scores, awarded_scores = scorer.all_scores
+    except Exception as e:
+        flash(str(e))
+        return redirect(url_for("index"))
+
     return render_template(
-        "index.html.jinja",
-        errors=errors,
-        usage=usage,
-        more_usage=more_usage,
-        columns=columns,
-        all_columns=all_columns,
-        url=scorer.url if sheet_id else url,
-        prompt_column_select=prompt_column_select,
+        "score.html.jinja",
+        url=scorer.sheet_url,
+        show_rankings=scorer.show_rankings,
         rankings=rankings,
-        show_rankings=show_rankings,
         received_scores=received_scores,
         awarded_scores=awarded_scores,
-        page=page,
+    )
+
+
+@app.route("/columns", methods=["GET"])
+def columns():
+    _, sheet_id, columns, _ = _parse_args()
+    all_columns = request.args.getlist("all_columns")
+    # FIXME: Could pass missing columns to make number of selections smaller
+    return render_template(
+        "columns.html.jinja",
+        all_columns=all_columns,
+        columns=columns,
+        sheet_id=sheet_id,
     )
 
 

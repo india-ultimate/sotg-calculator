@@ -30,6 +30,12 @@ DAY_COLUMN = "Day"
 TOTAL_SCORE_COLUMN = "Score"
 TOTAL_SELF_SCORE_COLUMN = "Self Score"
 
+ALL_COLUMNS = (
+    [TEAM_COLUMN, OPPONENT_COLUMN, DAY_COLUMN]
+    + OPPONENT_SCORE_COLUMNS
+    + TEAM_SCORE_COLUMNS
+)
+
 
 def to_numbers(x):
     """Convert an element to a number."""
@@ -64,7 +70,13 @@ def gsheet_id(url):
 
 def export_url(sheet_id):
     """Return the export URL using sheet_id."""
-    return f"https://{GSHEET_NETLOC}{GSHEET_PATH_PREFIX}{sheet_id}/export?format=csv"
+    base = sheet_url(sheet_id)
+    return f"{base}/export?format=csv"
+
+
+def sheet_url(sheet_id):
+    """Return the sheet URL using sheet_id."""
+    return f"https://{GSHEET_NETLOC}{GSHEET_PATH_PREFIX}{sheet_id}"
 
 
 def get_missing_scores(outer, inner, left_on, right_on):
@@ -88,6 +100,7 @@ class SOTGScorer:
 
     def __init__(self, sheet_id, columns=None):
         self.url = export_url(sheet_id)
+        self.sheet_url = sheet_url(sheet_id)
         self.csv, self.show_rankings = self.get_csv_and_mode()
         self.columns = columns or {}
 
@@ -132,6 +145,16 @@ class SOTGScorer:
                 COLUMNS[int(columns.get("day"))] if columns.get("day") else DAY_COLUMN
             )
         return self._data
+
+    @property
+    def column_names(self):
+        if not hasattr(self, "_data"):
+            return ALL_COLUMNS
+        return (
+            [self.team_column, self.opponent_column, self.day_column]
+            + self.opponent_score_columns
+            + self.team_score_columns
+        )
 
     @property
     def teams(self):
@@ -227,6 +250,12 @@ class SOTGScorer:
     def all_scores(self):
         """Return rankings, received and awarded scores."""
         return self.rankings, self.received_scores, self.awarded_scores
+
+    @property
+    def missing_columns(self):
+        # NOTE: accessing self.data populates attributes required by self.column_names
+        data_columns = self.data.columns
+        return set(self.column_names) - set(data_columns)
 
     def _bold_columns(self, column):
         """Set font-weight if column needs to be bold"""

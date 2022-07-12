@@ -1,0 +1,11 @@
+{% extends "base.html.jinja" %}
+{% block content %}
+
+{% include "column-selection-form.html.jinja" %}
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.js"></script>
+    <script src="{{url_for('static', filename='js/download-buttons.js')}}"></script>
+{% endblock %}

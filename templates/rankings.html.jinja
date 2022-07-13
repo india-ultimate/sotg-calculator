@@ -52,14 +52,20 @@
                   <div class="card-text form-text text-muted">
                     <ul class="alert alert-warning">
                       {% for (name, day) in missing_our %}
-                      <li><small>{{team}} has not submitted scores for the game against {{name}} on {{day}}</small></li>
+                      <li><small>{{team}} has not submitted scores for the game against {{name}} on {{day}}, but {{name}} has.</small></li>
                       {% endfor %}
                       {% for (name, day) in missing_other %}
-                      <li><small>{{name}} has not submitted scores for the game against {{team}} on {{day}}</small></li>
+                      <li><small>{{name}} has not submitted scores for the game against {{team}} on {{day}}, but {{team}} has.</small></li>
                       {% endfor %}
                     </ul>
                   </div>
                   {% endif %}
+                  <small class="form-text text-muted">
+                    NOTE: Missing score submissions are identified if only one
+                      of the teams hasn't submitted them.  The app is not aware
+                      of the tournament schedule to catch missing scores when
+                      both teams have not submitted them.
+                  </small>
                 </div>
             </div>
         {% endfor %}
@@ -83,14 +89,20 @@
                   <div class="card-text form-text text-muted">
                     <ul class="alert alert-warning">
                       {% for (name, day) in missing_our %}
-                      <li><small>{{team}} has not submitted scores for the game against {{name}} on {{day}}</small></li>
+                      <li><small>{{team}} has not submitted scores for the game against {{name}} on {{day}}, but {{name}} has.</small></li>
                       {% endfor %}
                       {% for (name, day) in missing_other %}
-                      <li><small>{{name}} has not submitted scores for the game against {{team}} on {{day}}</small></li>
+                      <li><small>{{name}} has not submitted scores for the game against {{team}} on {{day}}, but {{team}} has.</small></li>
                       {% endfor %}
                     </ul>
                   </div>
                   {% endif %}
+                  <small class="form-text text-muted">
+                    NOTE: Missing score submissions are identified if only one
+                      of the teams hasn't submitted them.  The app is not aware
+                      of the tournament schedule to catch missing scores when
+                      both teams have not submitted them.
+                  </small>
                 </div>
             </div>
         {% endfor %}

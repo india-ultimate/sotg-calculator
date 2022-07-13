@@ -154,7 +154,6 @@ def columns():
     return render_template(
         "columns.html.jinja",
         all_columns=all_columns,
-        # FIXME: Use missing_columns in template to make column selection form smaller
         opponent_column_missing=OPPONENT_COLUMN in missing_columns,
         opponent_scores_columns_missing=bool(
             missing_columns.intersection(set(OPPONENT_SCORE_COLUMNS))

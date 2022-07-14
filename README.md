@@ -12,7 +12,7 @@ An interactive web-app to manage spirit scores for a tournament.
 
 ### Example
 
-[Example calculated scores](https://sotg.indiaultimate.org/score?url=https://docs.google.com/spreadsheets/d/10uHbqsqrFV_5eFdpPi4ybHeKnzEzpNe1uq6LlCR8hwU) here are calculated from this [sample response sheet](https://docs.google.com/spreadsheets/d/10uHbqsqrFV_5eFdpPi4ybHeKnzEzpNe1uq6LlCR8hwU/edit#gid=1141649430)
+[Scores](https://sotg.indiaultimate.org/score?url=https://docs.google.com/spreadsheets/d/10uHbqsqrFV_5eFdpPi4ybHeKnzEzpNe1uq6LlCR8hwU) here are being calculated from these [responses](https://docs.google.com/spreadsheets/d/10uHbqsqrFV_5eFdpPi4ybHeKnzEzpNe1uq6LlCR8hwU/edit#gid=1141649430)
 
 <!-- More -->
 ### Copying and using the form template

@@ -31,25 +31,30 @@ app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "Super secret key")
 
 
-def get_usage(base_url, prefix="## Usage"):
-    """Return rendered HTML of the Usage section from README.md."""
+def get_readme_section(base_url, prefix="## Usage"):
+    """Return rendered HTML of the specified section from README.md."""
+
     with open(README) as f:
         lines = f.readlines()
 
-    usage = ""
+    text = ""
     for line in lines:
-        if not usage and not line.startswith(prefix):
+        if not text and not line.startswith(prefix):
             continue
-        elif usage and line.startswith("## ") and not line.startswith(prefix):
+        elif text and line.startswith("## ") and not line.startswith(prefix):
             break
         else:
-            usage += line
+            text += line
 
     # Change links to work with current app
     if urlparse(base_url).netloc != DEPLOYED_HOST:
-        usage = usage.replace(f"https://{DEPLOYED_HOST}/", base_url)
+        text = text.replace(f"https://{DEPLOYED_HOST}/", base_url)
 
-    html = mistune.markdown(usage, escape=False)
+    return mistune.markdown(text, escape=False)
+
+
+def get_usage(base_url):
+    html = get_readme_section(base_url, "## Usage")
     usage, more_usage = html.split("<!-- More -->")
     with open(join(HERE, "templates", "read-more-button.html.jinja")) as f:
         button_code = f.read().strip()

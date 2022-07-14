@@ -72,9 +72,9 @@ def redirect_heroku():
         return redirect(urlunparse(urlparts_list), code=301)
 
 
-@app.route("/about")
-def about():
-    return render_template("about.html")
+@app.route("/how-to")
+def how_to():
+    return render_template("how-to.html")
 
 
 @app.route("/demo")

@@ -31,18 +31,20 @@ app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "Super secret key")
 
 
-def get_usage(base_url):
+def get_usage(base_url, prefix="## Usage"):
     """Return rendered HTML of the Usage section from README.md."""
+    with open(README) as f:
+        lines = f.readlines()
+
     usage = ""
-    for line in open(README):
-        if not usage and not line.startswith("## Usage"):
+    for line in lines:
+        if not usage and not line.startswith(prefix):
             continue
-
-        elif usage and line.startswith("## ") and not line.startswith("## Usage"):
+        elif usage and line.startswith("## ") and not line.startswith(prefix):
             break
-
         else:
             usage += line
+
     # Change links to work with current app
     if urlparse(base_url).netloc != DEPLOYED_HOST:
         usage = usage.replace(f"https://{DEPLOYED_HOST}/", base_url)

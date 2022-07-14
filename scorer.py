@@ -178,7 +178,7 @@ class SOTGScorer:
         """
         data = self.data
         self._make_scores_numbers()
-        d_int = np.int
+
         # Compute aggregate scores
         total_score = data[self.opponent_score_columns].sum(axis=1)
         data[TOTAL_SCORE_COLUMN] = total_score
@@ -194,7 +194,7 @@ class SOTGScorer:
         avg_score = score / score_matches
         avg_self_score = self_score / self_score_matches
         # Create dataframe to use for ranking
-        rankings = pd.DataFrame([score, self_score], dtype=d_int).transpose()
+        rankings = pd.DataFrame([score, self_score], dtype=np.int).transpose()
         rankings["Avg spirit score"] = avg_score
         rankings["Avg self spirit score"] = avg_self_score
         rankings["Avg score difference"] = avg_score - avg_self_score
@@ -202,7 +202,7 @@ class SOTGScorer:
         # FIXME: This is such a mess!
         rankings = rankings.sort_values("Avg spirit score", ascending=False)
         ranks = rankings["Avg spirit score"].rank(method="min", ascending=False)
-        rankings["Rank"] = pd.Series(ranks, dtype=d_int)
+        rankings["Rank"] = pd.Series(ranks, dtype=np.int)
         rankings["Team"] = rankings.index
         column_order = [
             "Rank",

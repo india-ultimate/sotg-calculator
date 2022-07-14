@@ -176,23 +176,15 @@ class SOTGScorer:
         |Team|Matches|Score|Self score|Avg spirit score|Avg self score|Difference|
 
         """
-        data = self.data
-        self._make_scores_numbers()
 
-        # Compute aggregate scores
-        total_score = data[self.opponent_score_columns].sum(axis=1)
-        data[TOTAL_SCORE_COLUMN] = total_score
-        total_self_score = data[self.team_score_columns].sum(axis=1)
-        data[TOTAL_SELF_SCORE_COLUMN] = total_self_score
-        # Get matches, total scores and averages
-        team_column = self.team_column
-        opponent_column = self.opponent_column
-        score_matches = data.groupby(opponent_column)[opponent_column].count()
-        self_score_matches = data.groupby(team_column)[team_column].count()
-        score = data.groupby(self.opponent_column)[TOTAL_SCORE_COLUMN].sum()
-        self_score = data.groupby(team_column)[TOTAL_SELF_SCORE_COLUMN].sum()
-        avg_score = score / score_matches
-        avg_self_score = self_score / self_score_matches
+        self._make_scores_numbers()
+        # Get total scores and averages
+        score, avg_score = self._get_scores(
+            self.opponent_column, self.opponent_score_columns, TOTAL_SCORE_COLUMN
+        )
+        self_score, avg_self_score = self._get_scores(
+            self.team_column, self.team_score_columns, TOTAL_SELF_SCORE_COLUMN
+        )
         # Create dataframe to use for ranking
         rankings = pd.DataFrame([score, self_score], dtype=np.int).transpose()
         rankings["Avg spirit score"] = avg_score
@@ -265,6 +257,12 @@ class SOTGScorer:
             else ""
             for _ in column
         ]
+
+    def _get_scores(self, groupby_column, score_columns, total_column):
+        total_score = self.data[score_columns].sum(axis=1)
+        self.data[total_column] = total_score
+        score_data = self.data.groupby(groupby_column)[total_column]
+        return (score_data.sum(), score_data.mean())
 
     def _get_received_scores(self, team):
         """Return all the spirit scores received by the specified team

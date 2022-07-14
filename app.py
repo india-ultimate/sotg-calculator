@@ -31,7 +31,7 @@ app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "Super secret key")
 
 
-def get_usage():
+def get_usage(base_url):
     """Return rendered HTML of the Usage section from README.md."""
     usage = ""
     for line in open(README):
@@ -43,6 +43,10 @@ def get_usage():
 
         else:
             usage += line
+    # Change links to work with current app
+    if urlparse(base_url).netloc != DEPLOYED_HOST:
+        usage = usage.replace(f"https://{DEPLOYED_HOST}/", base_url)
+
     html = mistune.markdown(usage, escape=False)
     usage, more_usage = html.split("<!-- More -->")
     with open(join(HERE, "templates", "read-more-button.html.jinja")) as f:
@@ -96,7 +100,7 @@ def f_decrypt(token):
 
 @app.route("/", methods=["GET"])
 def index():
-    usage, more_usage = get_usage()
+    usage, more_usage = get_usage(request.base_url)
     return render_template("index.html.jinja", usage=usage, more_usage=more_usage)
 
 

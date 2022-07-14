@@ -191,7 +191,6 @@ class SOTGScorer:
         rankings["Avg self score"] = avg_self_score
         rankings["Avg score difference"] = avg_score - avg_self_score
         # Compute and order by ranks
-        # FIXME: This is such a mess!
         rankings = rankings.sort_values("Avg score", ascending=False)
         ranks = rankings["Avg score"].rank(method="min", ascending=False)
         rankings["Rank"] = pd.Series(ranks, dtype=np.int)

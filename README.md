@@ -34,6 +34,10 @@ You should use this tool if you want to
 1. Click `Calculate Ranks`
 1. Profit!
 
+See the [how-to page](https://sotg.indiaultimate.org/how-to) for more detailed
+instructions for using the app.  There's also a gif animation
+[here](https://sotg.indiaultimate.org/demo).
+
 ### Example
 
 [Scores](https://sotg.indiaultimate.org/score?url=https://docs.google.com/spreadsheets/d/10uHbqsqrFV_5eFdpPi4ybHeKnzEzpNe1uq6LlCR8hwU) here are being calculated from these [responses](https://docs.google.com/spreadsheets/d/10uHbqsqrFV_5eFdpPi4ybHeKnzEzpNe1uq6LlCR8hwU/edit#gid=1141649430)

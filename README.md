@@ -2,6 +2,30 @@
 
 An interactive web-app to manage spirit scores for a tournament.
 
+## Motivation
+
+In Indian Ultimate, SOTG winners are announced in the presentation ceremony
+immediately after the finals of a tournament.
+
+Spirit Directors feel immense pressure to double check the scores and
+calculations and decide the winners in a short interval of time. Often they are
+also playing in a tournament and it is a distraction from the games, especially
+towards the end of the tournament.
+
+This app automates the data processing and calculations to eliminate human
+errors and also to free up mind-space for tournament Spirit Directors.
+
+The app also lets Spirit Directors share Spirit scores with the teams through
+out a tournament. Teams can see scores for all the games that they have already
+self-scored. This lets teams adjust their behavior based on feedback.
+
+You should use this tool if you want to
+
+1) eliminate human errors
+2) avoid worrying about calculating spirit ranks under a crazy time pressure
+3) easily identify the teams to nudge to fill up the scores
+4) share spirit scores with teams through out a tournament
+
 ## Usage
 
 1. Use a copy of [this form](https://docs.google.com/spreadsheets/d/16d4gBNwR2mTrNbB5tq2REGjH-03T4GX701ueOvT-cDo/edit#gid=1545695387) for accepting spirit scores <!-- see-more-link -->

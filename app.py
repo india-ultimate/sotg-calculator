@@ -108,7 +108,10 @@ def f_decrypt(token):
 @app.route("/", methods=["GET"])
 def index():
     usage, more_usage = get_usage(request.base_url)
-    return render_template("index.html.jinja", usage=usage, more_usage=more_usage)
+    motivation = get_readme_section(request.base_url, "## Motivation")
+    return render_template(
+        "index.html.jinja", usage=usage, more_usage=more_usage, motivation=motivation
+    )
 
 
 @app.route("/score", methods=["GET"])

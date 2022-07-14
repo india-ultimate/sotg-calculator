@@ -187,20 +187,20 @@ class SOTGScorer:
         )
         # Create dataframe to use for ranking
         rankings = pd.DataFrame([score, self_score], dtype=np.int).transpose()
-        rankings["Avg spirit score"] = avg_score
-        rankings["Avg self spirit score"] = avg_self_score
+        rankings["Avg score"] = avg_score
+        rankings["Avg self score"] = avg_self_score
         rankings["Avg score difference"] = avg_score - avg_self_score
         # Compute and order by ranks
         # FIXME: This is such a mess!
-        rankings = rankings.sort_values("Avg spirit score", ascending=False)
-        ranks = rankings["Avg spirit score"].rank(method="min", ascending=False)
+        rankings = rankings.sort_values("Avg score", ascending=False)
+        ranks = rankings["Avg score"].rank(method="min", ascending=False)
         rankings["Rank"] = pd.Series(ranks, dtype=np.int)
         rankings["Team"] = rankings.index
         column_order = [
             "Rank",
             "Team",
-            "Avg spirit score",
-            "Avg self spirit score",
+            "Avg score",
+            "Avg self score",
             "Score",
             "Self Score",
             "Avg score difference",
@@ -252,9 +252,7 @@ class SOTGScorer:
     def _bold_columns(self, column):
         """Set font-weight if column needs to be bold"""
         return [
-            "font-weight: 700;"
-            if column.name in {"Rank", "Team", "Avg spirit score"}
-            else ""
+            "font-weight: 700;" if column.name in {"Rank", "Team", "Avg score"} else ""
             for _ in column
         ]
 

@@ -56,10 +56,9 @@ def requires_login(url):
 
 def gsheet_id(url):
     parsed = urlparse(url)
-    if not parsed.netloc == GSHEET_NETLOC:
-        raise InvalidURLException("Not a google spreadsheet URL")
-
-    if not parsed.path.startswith(GSHEET_PATH_PREFIX):
+    if not (
+        parsed.netloc == GSHEET_NETLOC and parsed.path.startswith(GSHEET_PATH_PREFIX)
+    ):
         raise InvalidURLException("Not a google spreadsheet URL")
 
     if requires_login(url):

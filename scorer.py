@@ -297,13 +297,7 @@ class SOTGScorer:
         merged_scores[self.team_column] = merged_scores[self.team_column].mask(
             pd.isna, merged_scores[self.opponent_column]
         )
-        columns = (
-            [self.team_column, self.day_column]
-            + self.opponent_score_columns
-            + [TOTAL_SCORE_COLUMN]
-            + self.team_score_columns
-            + [TOTAL_SELF_SCORE_COLUMN]
-        )
+        columns = columns + self.team_score_columns + [TOTAL_SELF_SCORE_COLUMN]
         display_scores = merged_scores[columns].rename(
             columns={self.team_column: "Scored by"}
         )
@@ -347,13 +341,7 @@ class SOTGScorer:
         merged_scores[self.opponent_column] = merged_scores[self.opponent_column].mask(
             pd.isna, merged_scores[self.team_column]
         )
-        columns = (
-            [self.opponent_column, self.day_column]
-            + self.opponent_score_columns
-            + [TOTAL_SCORE_COLUMN]
-            + self.team_score_columns
-            + [TOTAL_SELF_SCORE_COLUMN]
-        )
+        columns = columns + self.team_score_columns + [TOTAL_SELF_SCORE_COLUMN]
         return merged_scores[columns], missing_our, missing_other
 
     def _make_scores_numbers(self):

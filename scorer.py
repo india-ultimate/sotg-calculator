@@ -1,7 +1,8 @@
 #!/usr/bin/env python
+import cgi
 import io
 import re
-from urllib.parse import urlparse
+from urllib.parse import urlparse, unquote
 
 import numpy as np
 import pandas as pd
@@ -100,15 +101,29 @@ class SOTGScorer:
     def __init__(self, sheet_id, columns=None):
         self.url = export_url(sheet_id)
         self.sheet_url = sheet_url(sheet_id)
-        self.csv, self.show_rankings = self.get_csv_and_mode()
+        self.csv, self.name, self.show_rankings = self.get_csv_and_mode()
         self.columns = columns or {}
 
     def get_csv_and_mode(self):
         response = requests.get(self.url)
         header = response.headers.get("Content-Disposition", "")
-        match = re.search('filename="(.*)"', header)
-        name = match.group(1) if match else "metadata.csv"
-        return response.text, "show-rankings" in name
+        _, headers = cgi.parse_header(header)
+        filename = headers.get("filename*", "")
+        if not filename:
+            name = "Spirit Scores"
+            show_rankings = False
+        else:
+            filename = unquote(filename)
+            show_rankings = "show-rankings" in filename
+            name = filename
+        name = (
+            name.replace("UTF-8", "")
+            .replace("(Responses)", "")
+            .lstrip("'")
+            .rsplit("-", 1)[0]
+            .strip()
+        )
+        return response.text, name, show_rankings
 
     @property
     def data(self):

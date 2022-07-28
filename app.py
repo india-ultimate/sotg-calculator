@@ -151,6 +151,7 @@ def score():
         "score.html.jinja",
         url=scorer.sheet_url,
         show_rankings=scorer.show_rankings,
+        name=scorer.name,
         rankings=rankings,
         received_scores=received_scores,
         awarded_scores=awarded_scores,

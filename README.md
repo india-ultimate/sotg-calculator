@@ -48,10 +48,13 @@ instructions for using the app.  There's also a gif animation
 
 - Make a copy of [the response sheet](https://docs.google.com/spreadsheets/d/16d4gBNwR2mTrNbB5tq2REGjH-03T4GX701ueOvT-cDo/edit#gid=1545695387) by navigating to `File > Make a
   copy...`. (*NOTE:* You need to be signed into your Google account)
-- From the copied spreadsheet, open the Google form by navigating to `Form >
+- Delete all the old responses collected in the spreadsheet. Use Delete rows option to ensure new results are added to the top of the spreadsheet.
+- From the copied spreadsheet, open the Google form by navigating to `Tools > Manage Form >
   Edit form`
 - Edit the form, as required
   - Change title, teams, etc.
+    - Adding teams in alphabetical order helps make it easier to find teams
+    - Copy pasting a list of names works correctly, when creating team name options
     - Add any new questions if required
     - Do *NOT* change the existing questions
 - Share the form URL of this edited form, to collect responses. If you have

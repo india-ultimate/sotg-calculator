@@ -1,0 +1,7 @@
+# flyctl launch added from .gitignore
+**/*.pyc
+.envrc
+
+# flyctl launch added from .mypy_cache/.gitignore
+# Automatically created by mypy
+.mypy_cache/**/*

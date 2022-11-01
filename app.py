@@ -23,6 +23,7 @@ HERE = dirname(abspath(__file__))
 README = join(HERE, "README.md")
 DEBUG = "DEBUG" in os.environ
 HEROKU_HOST = "sotg-calculator.herokuapp.com"
+FLYDEV_HOST = "sotg-calculator.fly.dev"
 DEPLOYED_HOST = "sotg.indiaultimate.org"
 FERNET_KEY = os.getenv(
     "FERNET_KEY", "fJmpQZpowvAPFiYu4fPT0-dKRbd2h_Mvy7XXsuf9FdE="
@@ -66,7 +67,7 @@ def get_usage(base_url):
 def redirect_heroku():
     """Redirect herokuapp requests to indiaultimate.org."""
     urlparts = urlparse(request.url)
-    if urlparts.netloc == HEROKU_HOST:
+    if urlparts.netloc in set([HEROKU_HOST, FLYDEV_HOST]):
         urlparts_list = list(urlparts)
         urlparts_list[1] = DEPLOYED_HOST
         return redirect(urlunparse(urlparts_list), code=301)
